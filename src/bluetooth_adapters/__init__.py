@@ -27,7 +27,7 @@ async def get_bluetooth_adapters() -> set[str]:
         member="GetManagedObjects",
     )
     reply = await bus.call(msg)
-    await bus.disconnect()
+    bus.disconnect()
     if not reply or reply.message_type != MessageType.METHOD_RETURN:
         _LOGGER.debug("Unexpected replay: %s", reply)
         return adapters

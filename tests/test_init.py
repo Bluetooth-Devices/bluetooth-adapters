@@ -41,7 +41,7 @@ async def test_get_bluetooth_adapters_no_call_return():
             pass
 
         async def connect(self):
-            return AsyncMock()
+            return AsyncMock(disconnect=MagicMock(), call=AsyncMock())
 
         async def call(self):
             return None
@@ -58,6 +58,7 @@ async def test_get_bluetooth_adapters_no_wrong_return():
 
         async def connect(self):
             return AsyncMock(
+                disconnect=MagicMock(),
                 call=AsyncMock(
                     return_value=MagicMock(
                         body=[
@@ -69,11 +70,8 @@ async def test_get_bluetooth_adapters_no_wrong_return():
                         ],
                         message_type="wrong",
                     )
-                )
+                ),
             )
-
-        async def disconnect(self):
-            pass
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == set()
@@ -87,6 +85,7 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
 
         async def connect(self):
             return AsyncMock(
+                disconnect=MagicMock(),
                 call=AsyncMock(
                     return_value=MagicMock(
                         body=[
@@ -99,11 +98,8 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
                         ],
                         message_type=MessageType.METHOD_RETURN,
                     )
-                )
+                ),
             )
-
-        async def disconnect(self):
-            pass
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == {"hci0", "hci1"}
