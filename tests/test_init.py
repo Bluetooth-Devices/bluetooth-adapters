@@ -15,7 +15,7 @@ async def test_get_bluetooth_adapters_file_not_found():
             raise FileNotFoundError
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
-        assert await get_bluetooth_adapters() == set()
+        assert await get_bluetooth_adapters() == []
 
 
 @pytest.mark.asyncio
@@ -31,7 +31,7 @@ async def test_get_bluetooth_adapters_connect_fails():
             return None
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
-        assert await get_bluetooth_adapters() == set()
+        assert await get_bluetooth_adapters() == []
 
 
 @pytest.mark.asyncio
@@ -47,7 +47,7 @@ async def test_get_bluetooth_adapters_no_call_return():
             return None
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
-        assert await get_bluetooth_adapters() == set()
+        assert await get_bluetooth_adapters() == []
 
 
 @pytest.mark.asyncio
@@ -74,7 +74,7 @@ async def test_get_bluetooth_adapters_no_wrong_return():
             )
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
-        assert await get_bluetooth_adapters() == set()
+        assert await get_bluetooth_adapters() == []
 
 
 @pytest.mark.asyncio
@@ -102,4 +102,4 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
             )
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
-        assert await get_bluetooth_adapters() == {"hci0", "hci1"}
+        assert await get_bluetooth_adapters() == ["hci0", "hci1"]
