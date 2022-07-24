@@ -10,9 +10,9 @@ __all__ = ["get_bluetooth_adapters"]
 _LOGGER = logging.getLogger(__name__)
 
 
-async def get_bluetooth_adapters() -> set[str]:
+async def get_bluetooth_adapters() -> list[str]:
     """Return a list of bluetooth adapters."""
-    adapters: set[str] = set()
+    adapters: list[str] = []
     try:
         bus = await MessageBus(
             bus_type=BusType.SYSTEM, negotiate_unix_fd=True
@@ -35,5 +35,7 @@ async def get_bluetooth_adapters() -> set[str]:
         path_str = str(path)
         if path_str.startswith("/org/bluez/hci"):
             split_path = path_str.split("/")
-            adapters.add(split_path[3])
+            adapter = split_path[3]
+            if adapter not in adapters:
+                adapters.append(adapter)
     return adapters
