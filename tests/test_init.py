@@ -1,8 +1,11 @@
+import asyncio
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from dbus_next import MessageType
 
+import bluetooth_adapters
 from bluetooth_adapters import get_bluetooth_adapters
 
 
@@ -47,6 +50,27 @@ async def test_get_bluetooth_adapters_no_call_return():
             return None
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
+        assert await get_bluetooth_adapters() == []
+
+
+@pytest.mark.asyncio
+async def test_get_bluetooth_adapters_times_out():
+    async def _stall(*args: Any) -> None:
+        await asyncio.sleep(10)
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            return AsyncMock(
+                disconnect=MagicMock(),
+                call=AsyncMock(side_effect=_stall),
+            )
+
+    with patch.object(bluetooth_adapters, "REPLY_TIMEOUT", 0), patch(
+        "bluetooth_adapters.MessageBus", MockMessageBus
+    ):
         assert await get_bluetooth_adapters() == []
 
 

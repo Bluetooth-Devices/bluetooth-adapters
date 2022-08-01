@@ -1,13 +1,17 @@
 __version__ = "0.1.2"
 
+import asyncio
 import logging
 
+import async_timeout
 from dbus_next import BusType, Message, MessageType
 from dbus_next.aio import MessageBus
 
 __all__ = ["get_bluetooth_adapters"]
 
 _LOGGER = logging.getLogger(__name__)
+
+REPLY_TIMEOUT = 8
 
 
 async def get_bluetooth_adapters() -> list[str]:
@@ -26,7 +30,12 @@ async def get_bluetooth_adapters() -> list[str]:
         interface="org.freedesktop.DBus.ObjectManager",
         member="GetManagedObjects",
     )
-    reply = await bus.call(msg)
+    try:
+        async with async_timeout.timeout(REPLY_TIMEOUT):
+            reply = await bus.call(msg)
+    except asyncio.TimeoutError:
+        _LOGGER.debug("D-bus timeout waiting for reply to GetManagedObjects")
+        return adapters
     bus.disconnect()
     if not reply or reply.message_type != MessageType.METHOD_RETURN:
         _LOGGER.debug("Unexpected replay: %s", reply)
