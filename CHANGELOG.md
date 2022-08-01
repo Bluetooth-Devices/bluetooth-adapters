@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.1.3 (2022-08-01)
+### Fix
+* Add a timeout in case dbus fails to respond ([#6](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/6)) ([`eff1022`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/eff10222a6f1e0be4a599e6e47f20bace4ffd711))
+
 ## v0.1.2 (2022-07-24)
 ### Fix
 * Adapters now returns a list instead of a set since order matters ([#5](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/5)) ([`b4f153b`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/b4f153bf4198ad34e9e12113272c798fd6bddad6))
