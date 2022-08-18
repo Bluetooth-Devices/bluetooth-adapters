@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.0 (2022-08-18)
+### Feature
+* Add get_bluetooth_adapter_details ([#7](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/7)) ([`619f1ac`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/619f1acc9efd953ff57c9f126f64c21579b65e7e))
+
 ## v0.1.3 (2022-08-01)
 ### Fix
 * Add a timeout in case dbus fails to respond ([#6](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/6)) ([`eff1022`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/eff10222a6f1e0be4a599e6e47f20bace4ffd711))
