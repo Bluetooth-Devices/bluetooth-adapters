@@ -46,7 +46,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         bus = await MessageBus(
             bus_type=BusType.SYSTEM, negotiate_unix_fd=True
         ).connect()
-    except FileNotFoundError as ex:
+    except (FileNotFoundError, BrokenPipeError) as ex:
         _LOGGER.debug("Dbus not available: %s", ex)
         return {}
     msg = Message(
