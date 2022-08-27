@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.1 (2022-08-27)
+### Fix
+* Manage BrokenPipeError thrown by MessageBus.connect() ([#9](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/9)) ([`5d0fbaa`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/5d0fbaa1533924c2e256a1a682c6ea7982cf8ed7))
+
 ## v0.3.0 (2022-08-27)
 ### Feature
 * Add get_dbus_managed_objects ([#8](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/8)) ([`ce613ea`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/ce613ea7fcdda5fdacfc8848ed2a1ef290e64b92))
