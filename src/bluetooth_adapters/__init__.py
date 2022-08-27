@@ -2,6 +2,8 @@ __version__ = "0.3.0"
 
 import asyncio
 import logging
+from functools import cache
+from pathlib import Path
 from typing import Any
 
 import async_timeout
@@ -46,8 +48,28 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         bus = await MessageBus(
             bus_type=BusType.SYSTEM, negotiate_unix_fd=True
         ).connect()
-    except (FileNotFoundError, BrokenPipeError) as ex:
-        _LOGGER.debug("Dbus not available: %s", ex)
+    except FileNotFoundError as ex:
+        if is_docker_env():
+            _LOGGER.warning(
+                "DBus service not found; docker config may "
+                "be missing `-v /run/dbus:/run/dbus:ro`: %s",
+                ex,
+            )
+        _LOGGER.warning(
+            "DBus service not found; make sure the DBus socket " "is available: %s",
+            ex,
+        )
+        return {}
+    except BrokenPipeError as ex:
+        if is_docker_env():
+            _LOGGER.warning(
+                "DBus connection broken: %s; try restarting "
+                "`bluetooth`, `dbus`, and finally the docker container",
+                ex,
+            )
+        _LOGGER.warning(
+            "DBus connection broken: %s; try restarting " "`bluetooth` and `dbus`", ex
+        )
         return {}
     msg = Message(
         destination="org.bluez",
@@ -59,11 +81,15 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         async with async_timeout.timeout(REPLY_TIMEOUT):
             reply = await bus.call(msg)
     except asyncio.TimeoutError:
-        _LOGGER.debug("Dbus timeout waiting for reply to GetManagedObjects")
+        _LOGGER.error("Dbus timeout waiting for reply to GetManagedObjects")
         return {}
     bus.disconnect()
     if not reply or reply.message_type != MessageType.METHOD_RETURN:
-        _LOGGER.debug("Unexpected replay: %s", reply)
+        _LOGGER.error(
+            "Received an unexpected reply from Dbus while "
+            "calling GetManagedObjects on org.bluez: %s",
+            reply,
+        )
         return {}
     results: dict[str, Any] = reply.body[0]
     return results
@@ -87,3 +113,9 @@ def unpack_variants(dictionary: dict[str, Variant]) -> dict[str, Any]:
             v = [x.value if isinstance(x, Variant) else x for x in v]
         unpacked[k] = v
     return unpacked
+
+
+@cache
+def is_docker_env() -> bool:
+    """Return True if we run in a docker env."""
+    return Path("/.dockerenv").exists()
