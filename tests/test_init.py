@@ -6,7 +6,7 @@ import pytest
 from dbus_next import MessageType
 
 import bluetooth_adapters
-from bluetooth_adapters import get_bluetooth_adapters
+from bluetooth_adapters import get_bluetooth_adapters, get_dbus_managed_objects
 
 
 @pytest.mark.asyncio
@@ -114,10 +114,10 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
                     return_value=MagicMock(
                         body=[
                             {
-                                "/other": "",
-                                "/org/bluez/hci0": "",
-                                "/org/bluez/hci1": "",
-                                "/org/bluez/hci1/any": "",
+                                "/other": {},
+                                "/org/bluez/hci0": {},
+                                "/org/bluez/hci1": {},
+                                "/org/bluez/hci1/any": {},
                             }
                         ],
                         message_type=MessageType.METHOD_RETURN,
@@ -127,3 +127,36 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
 
     with patch("bluetooth_adapters.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == ["hci0", "hci1"]
+
+
+@pytest.mark.asyncio
+async def test_get_dbus_managed_objects():
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            return AsyncMock(
+                disconnect=MagicMock(),
+                call=AsyncMock(
+                    return_value=MagicMock(
+                        body=[
+                            {
+                                "/other": {},
+                                "/org/bluez/hci0": {},
+                                "/org/bluez/hci1": {},
+                                "/org/bluez/hci1/any": {},
+                            }
+                        ],
+                        message_type=MessageType.METHOD_RETURN,
+                    )
+                ),
+            )
+
+    with patch("bluetooth_adapters.MessageBus", MockMessageBus):
+        assert await get_dbus_managed_objects() == {
+            "/other": {},
+            "/org/bluez/hci0": {},
+            "/org/bluez/hci1": {},
+            "/org/bluez/hci1/any": {},
+        }
