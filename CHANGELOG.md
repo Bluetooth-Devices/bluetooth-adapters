@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.2 (2022-08-27)
+### Fix
+* Seperate FileNotFoundError and BrokenPipeError errors ([#10](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/10)) ([`f0b3d81`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f0b3d81d65586e536b78055426bd7118d1803587))
+
 ## v0.3.1 (2022-08-27)
 ### Fix
 * Manage BrokenPipeError thrown by MessageBus.connect() ([#9](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/9)) ([`5d0fbaa`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/5d0fbaa1533924c2e256a1a682c6ea7982cf8ed7))
