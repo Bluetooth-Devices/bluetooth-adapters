@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2022-08-27)
+### Feature
+* Add get_dbus_managed_objects ([#8](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/8)) ([`ce613ea`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/ce613ea7fcdda5fdacfc8848ed2a1ef290e64b92))
+
 ## v0.2.0 (2022-08-18)
 ### Feature
 * Add get_bluetooth_adapter_details ([#7](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/7)) ([`619f1ac`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/619f1acc9efd953ff57c9f126f64c21579b65e7e))
