@@ -38,6 +38,22 @@ async def test_get_bluetooth_adapters_connect_fails():
 
 
 @pytest.mark.asyncio
+async def test_get_bluetooth_adapters_connect_broken_pipe():
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            raise BrokenPipeError
+
+        async def call(self):
+            return None
+
+    with patch("bluetooth_adapters.MessageBus", MockMessageBus):
+        assert await get_bluetooth_adapters() == []
+
+
+@pytest.mark.asyncio
 async def test_get_bluetooth_adapters_no_call_return():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
