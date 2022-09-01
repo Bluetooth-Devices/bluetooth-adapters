@@ -81,7 +81,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         async with async_timeout.timeout(REPLY_TIMEOUT):
             reply = await bus.call(msg)
     except asyncio.TimeoutError:
-        _LOGGER.error(
+        _LOGGER.debug(
             "Dbus timeout waiting for reply to GetManagedObjects; try restarting "
             "`bluetooth` and `dbus`"
         )
