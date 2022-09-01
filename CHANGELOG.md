@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.3 (2022-09-01)
+### Fix
+* Downgrade dbus timeouts to debug logging as it likely means they have no bluez ([#11](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/11)) ([`4f6ae64`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/4f6ae64c22711022be449c19adc9bd97b2769846))
+
 ## v0.3.2 (2022-08-27)
 ### Fix
 * Seperate FileNotFoundError and BrokenPipeError errors ([#10](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/10)) ([`f0b3d81`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f0b3d81d65586e536b78055426bd7118d1803587))
