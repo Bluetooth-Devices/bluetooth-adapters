@@ -50,24 +50,24 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         ).connect()
     except FileNotFoundError as ex:
         if is_docker_env():
-            _LOGGER.warning(
+            _LOGGER.debug(
                 "DBus service not found; docker config may "
                 "be missing `-v /run/dbus:/run/dbus:ro`: %s",
                 ex,
             )
-        _LOGGER.warning(
+        _LOGGER.debug(
             "DBus service not found; make sure the DBus socket " "is available: %s",
             ex,
         )
         return {}
     except BrokenPipeError as ex:
         if is_docker_env():
-            _LOGGER.warning(
+            _LOGGER.debug(
                 "DBus connection broken: %s; try restarting "
                 "`bluetooth`, `dbus`, and finally the docker container",
                 ex,
             )
-        _LOGGER.warning(
+        _LOGGER.debug(
             "DBus connection broken: %s; try restarting " "`bluetooth` and `dbus`", ex
         )
         return {}
