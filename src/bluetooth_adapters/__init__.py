@@ -88,7 +88,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         return {}
     bus.disconnect()
     if not reply or reply.message_type != MessageType.METHOD_RETURN:
-        _LOGGER.error(
+        _LOGGER.debug(
             "Received an unexpected reply from Dbus while "
             "calling GetManagedObjects on org.bluez: %s",
             reply,
