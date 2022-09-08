@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.5 (2022-09-08)
+### Fix
+* Downgrade more loggers to debug in case they do not have bluez installed and do not want bluetooth ([#13](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/13)) ([`cae2700`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/cae2700f26b06f461647875f48e0f8a1baae298c))
+
 ## v0.3.4 (2022-09-02)
 ### Fix
 * Downgrade more loggers ([#12](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/12)) ([`3deb74f`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/3deb74f2ddd10738029b64d9865a6cbeada83b7b))
