@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Any
 
 import async_timeout
-from dbus_next import BusType, Message, MessageType
-from dbus_next.aio import MessageBus
-from dbus_next.signature import Variant
+from dbus_fast import BusType, Message, MessageType
+from dbus_fast.aio import MessageBus
+from dbus_fast.signature import Variant
 
 __all__ = ["get_bluetooth_adapters"]
 

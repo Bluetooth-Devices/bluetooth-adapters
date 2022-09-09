@@ -3,7 +3,7 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from dbus_next import MessageType
+from dbus_fast import MessageType
 
 import bluetooth_adapters
 from bluetooth_adapters import get_bluetooth_adapters, get_dbus_managed_objects
