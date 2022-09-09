@@ -80,6 +80,9 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
     try:
         async with async_timeout.timeout(REPLY_TIMEOUT):
             reply = await bus.call(msg)
+    except EOFError as ex:
+        _LOGGER.debug("DBus connection closed: %s", ex)
+        return {}
     except asyncio.TimeoutError:
         _LOGGER.debug(
             "Dbus timeout waiting for reply to GetManagedObjects; try restarting "
