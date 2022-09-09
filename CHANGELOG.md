@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.6 (2022-09-09)
+### Fix
+* Handle Dbus closing the connection on us ([#14](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/14)) ([`847698f`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/847698f14001b41790412e8cec38369ccb117402))
+
 ## v0.3.5 (2022-09-08)
 ### Fix
 * Downgrade more loggers to debug in case they do not have bluez installed and do not want bluetooth ([#13](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/13)) ([`cae2700`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/cae2700f26b06f461647875f48e0f8a1baae298c))
