@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2022-09-09)
+### Feature
+* Switch from dbus-next to dbus-fast ([#15](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/15)) ([`90d9ca5`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/90d9ca50ac687ecef129c0a080242ce8daa0edda))
+
 ## v0.3.6 (2022-09-09)
 ### Fix
 * Handle Dbus closing the connection on us ([#14](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/14)) ([`847698f`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/847698f14001b41790412e8cec38369ccb117402))

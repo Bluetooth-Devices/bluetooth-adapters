@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bluetooth-adapters"
-version = "0.3.6"
+version = "0.4.0"
 description = "Tools to enumerate and find Bluetooth Adapters"
 authors = ["J. Nick Koston <nick@koston.org>"]
 license = "Apache Software License 2.0"
