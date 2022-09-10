@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.1 (2022-09-10)
+### Fix
+* Bump dbus-fast ([#16](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/16)) ([`6e665ae`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/6e665ae38834e42d849ac33db228a9aa6578ddeb))
+
 ## v0.4.0 (2022-09-09)
 ### Feature
 * Switch from dbus-next to dbus-fast ([#15](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/15)) ([`90d9ca5`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/90d9ca50ac687ecef129c0a080242ce8daa0edda))
