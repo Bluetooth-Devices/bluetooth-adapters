@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2022-09-17)
+### Feature
+* Add support for restoring bluetooth history from the bus ([#17](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/17)) ([`3aaf104`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/3aaf104fe5798285f995e840310ea06f3d6a9a4d))
+
 ## v0.4.1 (2022-09-10)
 ### Fix
 * Bump dbus-fast ([#16](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/16)) ([`6e665ae`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/6e665ae38834e42d849ac33db228a9aa6578ddeb))
