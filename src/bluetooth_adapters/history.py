@@ -35,9 +35,9 @@ def load_history_from_managed_objects(
         split_path = path_str.split("/")
         adapter = split_path[3]
         uuids = props.get("UUIDs", [])
-        manufacturer_data = (
-            {k: bytes(v) for k, v in props.get("ManufacturerData", {}).items()},
-        )
+        manufacturer_data = {
+            k: bytes(v) for k, v in props.get("ManufacturerData", {}).items()
+        }
         device = BLEDevice(
             address,
             props["Alias"],
