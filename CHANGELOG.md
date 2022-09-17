@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.1 (2022-09-17)
+### Fix
+* Restoring manufacturer_data ([#18](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/18)) ([`264d63a`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/264d63a93af8aae9cfb4c4f75e2f1632366edb20))
+
 ## v0.5.0 (2022-09-17)
 ### Feature
 * Add support for restoring bluetooth history from the bus ([#17](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/17)) ([`3aaf104`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/3aaf104fe5798285f995e840310ea06f3d6a9a4d))
