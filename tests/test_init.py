@@ -27,6 +27,18 @@ async def test_get_bluetooth_adapters_file_not_found():
 
 
 @pytest.mark.asyncio
+async def test_get_bluetooth_adapters_connection_refused():
+    """Test get_bluetooth_adapters with connection refused."""
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            raise ConnectionRefusedError
+
+    with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
+        assert await get_bluetooth_adapters() == []
+
+
+@pytest.mark.asyncio
 async def test_get_bluetooth_adapters_connect_fails():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
