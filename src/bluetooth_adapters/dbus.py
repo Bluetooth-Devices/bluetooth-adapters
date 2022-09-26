@@ -78,6 +78,17 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
             "DBus connection broken: %s; try restarting " "`bluetooth` and `dbus`", ex
         )
         return {}
+    except ConnectionRefusedError as ex:
+        if is_docker_env():
+            _LOGGER.debug(
+                "DBus connection refused: %s; try restarting "
+                "`bluetooth`, `dbus`, and finally the docker container",
+                ex,
+            )
+        _LOGGER.debug(
+            "DBus connection refused: %s; try restarting " "`bluetooth` and `dbus`", ex
+        )
+        return {}
     msg = Message(
         destination="org.bluez",
         path="/",
