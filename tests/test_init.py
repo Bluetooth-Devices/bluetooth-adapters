@@ -39,6 +39,24 @@ async def test_get_bluetooth_adapters_connection_refused():
 
 
 @pytest.mark.asyncio
+async def test_get_bluetooth_adapters_connect_refused_docker():
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            raise ConnectionRefusedError
+
+        async def call(self):
+            return None
+
+    with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus), patch(
+        "bluetooth_adapters.dbus.is_docker_env", return_value=True
+    ):
+        assert await get_bluetooth_adapters() == []
+
+
+@pytest.mark.asyncio
 async def test_get_bluetooth_adapters_connect_fails():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
