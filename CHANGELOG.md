@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.3 (2022-10-01)
+### Fix
+* Compat with upcoming bleak ([#20](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/20)) ([`61fcdbf`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/61fcdbfd6865df17dda8369bf7b26ae51ed49d20))
+
 ## v0.5.2 (2022-09-26)
 ### Fix
 * Handle ConnectionRefusedError ([#19](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/19)) ([`7e85613`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/7e85613cb2f972773748b4cde4ba826f75d807d2))
