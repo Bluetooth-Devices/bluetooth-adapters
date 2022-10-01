@@ -4,6 +4,8 @@ from typing import Any
 from bleak.backends.device import BLEDevice
 from bleak.backends.scanner import AdvertisementData
 
+MIN_RSSI = -127
+
 
 @dataclass
 class AdvertisementHistory:
@@ -27,7 +29,7 @@ def load_history_from_managed_objects(
             continue
 
         address = props["Address"]
-        rssi = props.get("RSSI", 0)
+        rssi = props.get("RSSI", MIN_RSSI)
 
         if (prev_history := history.get(address)) and prev_history.device.rssi >= rssi:
             continue
@@ -53,6 +55,7 @@ def load_history_from_managed_objects(
             service_uuids=uuids,
             platform_data=props,
             tx_power=props.get("TxPower"),
+            rssi=rssi,
         )
         history[device.address] = AdvertisementHistory(
             device, advertisement_data, adapter
