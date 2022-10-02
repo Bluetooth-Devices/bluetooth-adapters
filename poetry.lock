@@ -114,14 +114,17 @@ toml = ["tomli"]
 
 [[package]]
 name = "dbus-fast"
-version = "1.4.0"
+version = "1.21.0"
 description = "A faster version of dbus-next"
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 
+[package.dependencies]
+async-timeout = ">=3.0.0"
+
 [package.extras]
-docs = ["Sphinx[docs] (>=5.1.1,<6.0.0)", "myst-parser[docs] (>=0.18.0,<0.19.0)", "sphinx-rtd-theme[docs] (>=1.0.0,<2.0.0)", "sphinxcontrib-asyncio[docs] (>=0.3.0,<0.4.0)", "sphinxcontrib-fulltoc[docs] (>=1.2.0,<2.0.0)"]
+docs = ["Sphinx (>=5.1.1,<6.0.0)", "myst-parser (>=0.18.0,<0.19.0)", "sphinx-rtd-theme (>=1.0.0,<2.0.0)", "sphinxcontrib-asyncio (>=0.3.0,<0.4.0)", "sphinxcontrib-fulltoc (>=1.2.0,<2.0.0)"]
 
 [[package]]
 name = "docutils"
@@ -610,7 +613,7 @@ docs = ["myst-parser", "Sphinx", "sphinx-rtd-theme"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "98357a2bd7e954e164aa5f655ccce405d981c93829e1b0306260957fade522f8"
+content-hash = "8ac80ac1354955ffcaabd30d9177d7e4e271900acb0fe95921b49c2c82e41963"
 
 [metadata.files]
 alabaster = [
@@ -714,8 +717,8 @@ coverage = [
     {file = "coverage-6.4.4.tar.gz", hash = "sha256:e16c45b726acb780e1e6f88b286d3c10b3914ab03438f32117c4aa52d7f30d58"},
 ]
 dbus-fast = [
-    {file = "dbus-fast-1.4.0.tar.gz", hash = "sha256:292fec563d27f39bdc46d0a7d03320ff2d77f5f336bd8f564fe186946a213764"},
-    {file = "dbus_fast-1.4.0-py3-none-any.whl", hash = "sha256:3fea12c425587bb2b552e60e40bfcda2d3b94e77a8b2a30ec07c5bbc187bc984"},
+    {file = "dbus-fast-1.21.0.tar.gz", hash = "sha256:e151335b5b4976ebcd51a4f4cd142cdf3a6ea5483715da5e735e89a3b6a1528b"},
+    {file = "dbus_fast-1.21.0-cp39-cp39-manylinux_2_31_x86_64.whl", hash = "sha256:75bec7448d0d7aa2608b0709ba89a947fe9eeabfd75f7a90acc23f992052c31a"},
 ]
 docutils = [
     {file = "docutils-0.17.1-py2.py3-none-any.whl", hash = "sha256:cf316c8370a737a022b72b56874f6602acf974a37a9fba42ec2876387549fc61"},

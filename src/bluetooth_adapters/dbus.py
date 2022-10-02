@@ -1,5 +1,3 @@
-__version__ = "0.4.0"
-
 import asyncio
 import logging
 from functools import cache
@@ -7,9 +5,8 @@ from pathlib import Path
 from typing import Any
 
 import async_timeout
-from dbus_fast import BusType, Message, MessageType
+from dbus_fast import BusType, Message, MessageType, unpack_variants
 from dbus_fast.aio import MessageBus
-from dbus_fast.signature import Variant
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -117,26 +114,6 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         return {}
     results: dict[str, Any] = reply.body[0]
     return results
-
-
-def unpack_variants(dictionary: dict[str, Variant]) -> dict[str, Any]:
-    """Recursively unpacks all ``Variant`` types in a dictionary to their
-    corresponding Python types.
-
-    ``dbus-next`` doesn't automatically do this, so this needs to be called on
-    all dictionaries ("a{sv}") returned from D-Bus messages.
-
-    This function comes from bleak.
-    """
-    unpacked = {}
-    for k, v in dictionary.items():
-        v = v.value if isinstance(v, Variant) else v
-        if isinstance(v, dict):
-            v = unpack_variants(v)
-        elif isinstance(v, list):
-            v = [x.value if isinstance(x, Variant) else x for x in v]
-        unpacked[k] = v
-    return unpacked
 
 
 @cache
