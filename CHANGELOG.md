@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2022-10-02)
+### Feature
+* Use unpack_variants from dbus-fast ([#21](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/21)) ([`f5e0cf4`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f5e0cf4837bac063aa2aae239a30908b13f55b93))
+
 ## v0.5.3 (2022-10-01)
 ### Fix
 * Compat with upcoming bleak ([#20](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/20)) ([`61fcdbf`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/61fcdbfd6865df17dda8369bf7b26ae51ed49d20))
