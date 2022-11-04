@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.0 (2022-11-04)
+### Feature
+* Speed up connecting to Dbus ([#22](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/22)) ([`6b45f84`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/6b45f84479e58d8a55277289ec6f4c1597d6b98a))
+
 ## v0.6.0 (2022-10-02)
 ### Feature
 * Use unpack_variants from dbus-fast ([#21](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/21)) ([`f5e0cf4`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f5e0cf4837bac063aa2aae239a30908b13f55b93))
