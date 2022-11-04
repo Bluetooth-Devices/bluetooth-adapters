@@ -49,9 +49,7 @@ async def get_dbus_managed_objects() -> dict[str, Any]:
 
 async def _get_dbus_managed_objects() -> dict[str, Any]:
     try:
-        bus = await MessageBus(
-            bus_type=BusType.SYSTEM, negotiate_unix_fd=True
-        ).connect()
+        bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
     except FileNotFoundError as ex:
         if is_docker_env():
             _LOGGER.debug(
