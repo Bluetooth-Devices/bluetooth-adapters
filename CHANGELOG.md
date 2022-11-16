@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.0 (2022-11-16)
+### Feature
+* Add new multi platform adapter manager ([#23](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/23)) ([`58119d1`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/58119d1c6f08c9804809b8cc94220231f5bc636d))
+
 ## v0.7.0 (2022-11-04)
 ### Feature
 * Speed up connecting to Dbus ([#22](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/22)) ([`6b45f84`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/6b45f84479e58d8a55277289ec6f4c1597d6b98a))
