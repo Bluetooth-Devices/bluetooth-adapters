@@ -13,10 +13,12 @@ class LinuxAdapters(BluetoothAdapters):
     def __init__(self) -> None:
         """Initialize the adapter."""
         self._bluez = BlueZDBusObjects()
+        self._adapters: dict[str, AdapterDetails] | None = None
 
     async def refresh(self) -> None:
         """Refresh the adapters."""
         await self._bluez.load()
+        self._adapters = {}
 
     @property
     def history(self) -> dict[str, AdvertisementHistory]:
@@ -26,17 +28,19 @@ class LinuxAdapters(BluetoothAdapters):
     @property
     def adapters(self) -> dict[str, AdapterDetails]:
         """Get the adapter details."""
-        adapters: dict[str, AdapterDetails] = {}
-        adapter_details = self._bluez.adapter_details
-        for adapter, details in adapter_details.items():
-            adapter1 = details["org.bluez.Adapter1"]
-            adapters[adapter] = AdapterDetails(
-                address=adapter1["Address"],
-                sw_version=adapter1["Name"],  # This is actually the BlueZ version
-                hw_version=adapter1.get("Modalias"),
-                passive_scan="org.bluez.AdvertisementMonitorManager1" in details,
-            )
-        return adapters
+        if self._adapters is None:
+            adapters: dict[str, AdapterDetails] = {}
+            adapter_details = self._bluez.adapter_details
+            for adapter, details in adapter_details.items():
+                adapter1 = details["org.bluez.Adapter1"]
+                adapters[adapter] = AdapterDetails(
+                    address=adapter1["Address"],
+                    sw_version=adapter1["Name"],  # This is actually the BlueZ version
+                    hw_version=adapter1.get("Modalias"),
+                    passive_scan="org.bluez.AdvertisementMonitorManager1" in details,
+                )
+            self._adapters = adapters
+        return self._adapters
 
     @property
     def default_adapter(self) -> str:

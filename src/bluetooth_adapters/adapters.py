@@ -1,7 +1,7 @@
 """Base class for Bluetooth adapters."""
 from __future__ import annotations
 
-from abc import abstractmethod
+from abc import abstractproperty
 
 from .history import AdvertisementHistory
 from .models import AdapterDetails
@@ -18,12 +18,12 @@ class BluetoothAdapters:
         """Get the history."""
         return {}
 
-    @abstractmethod
+    @abstractproperty
     @property
     def adapters(self) -> dict[str, AdapterDetails]:
         """Get the adapter details."""
 
-    @abstractmethod
+    @abstractproperty
     @property
     def default_adapter(self) -> str:
         """Get the default adapter."""
