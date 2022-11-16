@@ -1,6 +1,7 @@
 __version__ = "0.7.0"
 
 
+from .adapters import BluetoothAdapters
 from .const import (
     DEFAULT_ADDRESS,
     MACOS_DEFAULT_BLUETOOTH_ADAPTER,
@@ -26,6 +27,7 @@ from .util import adapter_human_name, adapter_unique_name
 
 __all__ = [
     "AdvertisementHistory",
+    "BluetoothAdapters",
     "BlueZDBusObjects",
     "adapter_human_name",
     "adapter_unique_name",
