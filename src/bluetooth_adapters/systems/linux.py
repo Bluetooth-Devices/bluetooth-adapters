@@ -18,7 +18,7 @@ class LinuxAdapters(BluetoothAdapters):
     async def refresh(self) -> None:
         """Refresh the adapters."""
         await self._bluez.load()
-        self._adapters = {}
+        self._adapters = None
 
     @property
     def history(self) -> dict[str, AdvertisementHistory]:
@@ -32,13 +32,16 @@ class LinuxAdapters(BluetoothAdapters):
             adapters: dict[str, AdapterDetails] = {}
             adapter_details = self._bluez.adapter_details
             for adapter, details in adapter_details.items():
-                adapter1 = details["org.bluez.Adapter1"]
-                adapters[adapter] = AdapterDetails(
-                    address=adapter1["Address"],
-                    sw_version=adapter1["Name"],  # This is actually the BlueZ version
-                    hw_version=adapter1.get("Modalias"),
-                    passive_scan="org.bluez.AdvertisementMonitorManager1" in details,
-                )
+                if adapter1 := details.get("org.bluez.Adapter1"):
+                    adapters[adapter] = AdapterDetails(
+                        address=adapter1["Address"],
+                        sw_version=adapter1[
+                            "Name"
+                        ],  # This is actually the BlueZ version
+                        hw_version=adapter1.get("Modalias"),
+                        passive_scan="org.bluez.AdvertisementMonitorManager1"
+                        in details,
+                    )
             self._adapters = adapters
         return self._adapters
 

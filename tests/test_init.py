@@ -7,8 +7,11 @@ from dbus_fast import MessageType
 
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
 from bluetooth_adapters import (
+    DEFAULT_ADDRESS,
     AdvertisementHistory,
     BlueZDBusObjects,
+    adapter_human_name,
+    adapter_unique_name,
     get_adapters,
     get_bluetooth_adapters,
     get_dbus_managed_objects,
@@ -371,7 +374,49 @@ async def test_get_adapters_linux():
                         body=[
                             {
                                 "/other": {},
-                                "/org/bluez/hci0": {},
+                                "/org/bluez/hci0": {
+                                    "org.bluez.Adapter1": {
+                                        "Address": "00:1A:7D:DA:71:04",
+                                        "AddressType": "public",
+                                        "Alias": "homeassistant",
+                                        "Class": 2883584,
+                                        "Discoverable": False,
+                                        "DiscoverableTimeout": 180,
+                                        "Discovering": True,
+                                        "Modalias": "usb:v1D6Bp0246d053F",
+                                        "Name": "homeassistant",
+                                        "Pairable": False,
+                                        "PairableTimeout": 0,
+                                        "Powered": True,
+                                        "Roles": ["central", "peripheral"],
+                                        "UUIDs": [
+                                            "0000110e-0000-1000-8000-00805f9b34fb",
+                                            "0000110a-0000-1000-8000-00805f9b34fb",
+                                            "00001200-0000-1000-8000-00805f9b34fb",
+                                            "0000110b-0000-1000-8000-00805f9b34fb",
+                                            "00001108-0000-1000-8000-00805f9b34fb",
+                                            "0000110c-0000-1000-8000-00805f9b34fb",
+                                            "00001800-0000-1000-8000-00805f9b34fb",
+                                            "00001801-0000-1000-8000-00805f9b34fb",
+                                            "0000180a-0000-1000-8000-00805f9b34fb",
+                                            "00001112-0000-1000-8000-00805f9b34fb",
+                                        ],
+                                    },
+                                    "org.bluez.GattManager1": {},
+                                    "org.bluez.LEAdvertisingManager1": {
+                                        "ActiveInstances": 0,
+                                        "SupportedIncludes": [
+                                            "tx-power",
+                                            "appearance",
+                                            "local-name",
+                                        ],
+                                        "SupportedInstances": 5,
+                                    },
+                                    "org.bluez.Media1": {},
+                                    "org.bluez.NetworkServer1": {},
+                                    "org.freedesktop.DBus.Introspectable": {},
+                                    "org.freedesktop.DBus.Properties": {},
+                                },
                                 "/org/bluez/hci1": {},
                                 "/org/bluez/hci1/any": {},
                                 "/org/bluez/hci0/dev_54_D2_72_AB_35_95": {
@@ -444,7 +489,22 @@ async def test_get_adapters_linux():
                 device=ANY, advertisement_data=ANY, source="hci0"
             )
         }
-        assert bluetooth_adapters.adapters == {}
+        assert bluetooth_adapters.adapters == {
+            "hci0": {
+                "address": "00:1A:7D:DA:71:04",
+                "hw_version": "usb:v1D6Bp0246d053F",
+                "passive_scan": False,
+                "sw_version": "homeassistant",
+            },
+        }
+        assert bluetooth_adapters.adapters == {
+            "hci0": {
+                "address": "00:1A:7D:DA:71:04",
+                "hw_version": "usb:v1D6Bp0246d053F",
+                "passive_scan": False,
+                "sw_version": "homeassistant",
+            },
+        }
 
 
 @pytest.mark.asyncio
@@ -485,3 +545,15 @@ async def test_get_adapters_windows():
                 "sw_version": "18.7.0",
             }
         }
+
+
+def test_adapter_human_name():
+    """Test adapter human name."""
+    assert adapter_human_name("hci0", DEFAULT_ADDRESS) == "hci0"
+    assert adapter_human_name("hci0", "aa:bb:cc:dd:ee:ff") == "hci0 (aa:bb:cc:dd:ee:ff)"
+
+
+def test_adapter_unique_name():
+    """Test adapter unique name."""
+    assert adapter_unique_name("hci0", DEFAULT_ADDRESS) == "hci0"
+    assert adapter_unique_name("hci0", "aa:bb:cc:dd:ee:ff") == "aa:bb:cc:dd:ee:ff"
