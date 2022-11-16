@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 from functools import cache
@@ -8,9 +10,49 @@ import async_timeout
 from dbus_fast import BusType, Message, MessageType, unpack_variants
 from dbus_fast.aio import MessageBus
 
+from .history import AdvertisementHistory, load_history_from_managed_objects
+
 _LOGGER = logging.getLogger(__name__)
 
 REPLY_TIMEOUT = 8
+
+
+class BlueZDBusObjects:
+    """Fetch and parse BlueZObjects."""
+
+    def __init__(self) -> None:
+        """Init the manager."""
+        self._packed_managed_objects: dict[str, Any] = {}
+        self._unpacked_managed_objects: dict[str, Any] = {}
+
+    async def load(self) -> None:
+        """Load from the bus."""
+        self._packed_managed_objects = await _get_dbus_managed_objects()
+        self._unpacked_managed_objects = {}
+
+    @property
+    def adapters(self) -> list[str]:
+        """Get adapters."""
+        return list(self.adapter_details)
+
+    @property
+    def unpacked_managed_objects(self) -> dict[str, Any]:
+        """Get unpacked managed objects."""
+        if not self._unpacked_managed_objects:
+            self._unpacked_managed_objects = unpack_variants(
+                self._packed_managed_objects
+            )
+        return self._unpacked_managed_objects
+
+    @property
+    def adapter_details(self) -> dict[str, dict[str, Any]]:
+        """Get adapters."""
+        return _adapters_from_managed_objects(self.unpacked_managed_objects)
+
+    @property
+    def history(self) -> dict[str, AdvertisementHistory]:
+        """Get history from managed objects."""
+        return load_history_from_managed_objects(self.unpacked_managed_objects)
 
 
 def _adapters_from_managed_objects(
