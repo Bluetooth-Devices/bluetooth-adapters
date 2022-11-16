@@ -1,46 +1,47 @@
 __version__ = "0.7.0"
 
-from typing import Any
 
+from .adapters import BluetoothAdapters
+from .const import (
+    DEFAULT_ADDRESS,
+    MACOS_DEFAULT_BLUETOOTH_ADAPTER,
+    UNIX_DEFAULT_BLUETOOTH_ADAPTER,
+    WINDOWS_DEFAULT_BLUETOOTH_ADAPTER,
+)
 from .dbus import (
-    _adapters_from_managed_objects,
+    BlueZDBusObjects,
     get_bluetooth_adapter_details,
     get_bluetooth_adapters,
     get_dbus_managed_objects,
 )
-from .history import AdvertisementHistory, load_history_from_managed_objects
+from .history import AdvertisementHistory
+from .models import (
+    ADAPTER_ADDRESS,
+    ADAPTER_HW_VERSION,
+    ADAPTER_PASSIVE_SCAN,
+    ADAPTER_SW_VERSION,
+    AdapterDetails,
+)
+from .systems import get_adapters
+from .util import adapter_human_name, adapter_unique_name
 
 __all__ = [
     "AdvertisementHistory",
+    "BluetoothAdapters",
     "BlueZDBusObjects",
+    "adapter_human_name",
+    "adapter_unique_name",
     "get_bluetooth_adapters",
     "get_bluetooth_adapter_details",
     "get_dbus_managed_objects",
+    "get_adapters",
+    "AdapterDetails",
+    "ADAPTER_ADDRESS",
+    "ADAPTER_SW_VERSION",
+    "ADAPTER_HW_VERSION",
+    "ADAPTER_PASSIVE_SCAN",
+    "WINDOWS_DEFAULT_BLUETOOTH_ADAPTER",
+    "MACOS_DEFAULT_BLUETOOTH_ADAPTER",
+    "UNIX_DEFAULT_BLUETOOTH_ADAPTER",
+    "DEFAULT_ADDRESS",
 ]
-
-
-class BlueZDBusObjects:
-    """Fetch and parse BlueZObjects."""
-
-    def __init__(self) -> None:
-        """Init the manager."""
-        self._managed_objects: dict[str, Any] = {}
-
-    async def load(self) -> None:
-        """Load from the bus."""
-        self._managed_objects = await get_dbus_managed_objects()
-
-    @property
-    def adapters(self) -> list[str]:
-        """Get adapters."""
-        return list(self.adapter_details)
-
-    @property
-    def adapter_details(self) -> dict[str, dict[str, Any]]:
-        """Get adapters."""
-        return _adapters_from_managed_objects(self._managed_objects)
-
-    @property
-    def history(self) -> dict[str, AdvertisementHistory]:
-        """Get history from managed objects."""
-        return load_history_from_managed_objects(self._managed_objects)
