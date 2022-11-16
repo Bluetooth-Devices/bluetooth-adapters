@@ -9,6 +9,7 @@ import bluetooth_adapters.dbus as bluetooth_adapters_dbus
 from bluetooth_adapters import (
     AdvertisementHistory,
     BlueZDBusObjects,
+    get_adapters,
     get_bluetooth_adapters,
     get_dbus_managed_objects,
 )
@@ -352,3 +353,135 @@ async def test_BlueZDBusObjects():
             "54:D2:72:AB:35:95": AdvertisementHistory(ANY, ANY, "hci0")
         }
         assert bluez.history["54:D2:72:AB:35:95"].device.rssi == -78
+
+
+@pytest.mark.asyncio
+async def test_get_adapters_linux():
+    """Test get_adapters."""
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            return AsyncMock(
+                disconnect=MagicMock(),
+                call=AsyncMock(
+                    return_value=MagicMock(
+                        body=[
+                            {
+                                "/other": {},
+                                "/org/bluez/hci0": {},
+                                "/org/bluez/hci1": {},
+                                "/org/bluez/hci1/any": {},
+                                "/org/bluez/hci0/dev_54_D2_72_AB_35_95": {
+                                    "org.freedesktop.DBus.Introspectable": {},
+                                    "org.bluez.Device1": {
+                                        "Address": "54:D2:72:AB:35:95",
+                                        "AddressType": "public",
+                                        "Name": "Nuki_1EAB3595",
+                                        "Alias": "Nuki_1EAB3595",
+                                        "Paired": False,
+                                        "Trusted": False,
+                                        "Blocked": False,
+                                        "LegacyPairing": False,
+                                        "RSSI": -78,
+                                        "Connected": False,
+                                        "UUIDs": [],
+                                        "Adapter": "/org/bluez/hci0",
+                                        "ManufacturerData": {
+                                            "76": b"\\x02\\x15\\xa9.\\xe2\\x00U\\x01\\x11\\xe4\\x91l\\x08\\x00 \\x0c\\x9af\\x1e\\xab5\\x95\\xc4"
+                                        },
+                                        "ServicesResolved": False,
+                                        "AdvertisingFlags": {
+                                            "__type": "<class 'bytearray'>",
+                                            "repr": "bytearray(b'\\x06')",
+                                        },
+                                    },
+                                    "org.freedesktop.DBus.Properties": {},
+                                },
+                                "/org/bluez/hci1/dev_54_D2_72_AB_35_95": {
+                                    "org.freedesktop.DBus.Introspectable": {},
+                                    "org.bluez.Device1": {
+                                        "Address": "54:D2:72:AB:35:95",
+                                        "AddressType": "public",
+                                        "Name": "Nuki_1EAB3595",
+                                        "Alias": "Nuki_1EAB3595",
+                                        "Paired": False,
+                                        "Trusted": False,
+                                        "Blocked": False,
+                                        "LegacyPairing": False,
+                                        "RSSI": -100,
+                                        "Connected": False,
+                                        "UUIDs": [],
+                                        "Adapter": "/org/bluez/hci0",
+                                        "ManufacturerData": {
+                                            "76": b"\\x02\\x15\\xa9.\\xe2\\x00U\\x01\\x11\\xe4\\x91l\\x08\\x00 \\x0c\\x9af\\x1e\\xab5\\x95\\xc4"
+                                        },
+                                        "ServicesResolved": False,
+                                        "AdvertisingFlags": {
+                                            "__type": "<class 'bytearray'>",
+                                            "repr": "bytearray(b'\\x06')",
+                                        },
+                                    },
+                                    "org.freedesktop.DBus.Properties": {},
+                                },
+                            }
+                        ],
+                        message_type=MessageType.METHOD_RETURN,
+                    )
+                ),
+            )
+
+    with patch("platform.system", return_value="Linux"), patch(
+        "bluetooth_adapters.dbus.MessageBus", MockMessageBus
+    ):
+        bluetooth_adapters = get_adapters()
+        await bluetooth_adapters.refresh()
+        assert bluetooth_adapters.default_adapter == "hci0"
+        assert bluetooth_adapters.history == {
+            "54:D2:72:AB:35:95": AdvertisementHistory(
+                device=ANY, advertisement_data=ANY, source="hci0"
+            )
+        }
+        assert bluetooth_adapters.adapters == {}
+
+
+@pytest.mark.asyncio
+async def test_get_adapters_macos():
+    """Test get_adapters macos."""
+
+    with patch("platform.system", return_value="Darwin"), patch(
+        "platform.release", return_value="18.7.0"
+    ):
+        bluetooth_adapters = get_adapters()
+        await bluetooth_adapters.refresh()
+        assert bluetooth_adapters.default_adapter == "Core Bluetooth"
+        assert bluetooth_adapters.history == {}
+        assert bluetooth_adapters.adapters == {
+            "Core Bluetooth": {
+                "address": "00:00:00:00:00:00",
+                "passive_scan": False,
+                "sw_version": "18.7.0",
+            }
+        }
+
+
+@pytest.mark.asyncio
+async def test_get_adapters_windows():
+    """Test get_adapters windows."""
+
+    with patch("platform.system", return_value="Windows"), patch(
+        "platform.release", return_value="18.7.0"
+    ):
+        bluetooth_adapters = get_adapters()
+        await bluetooth_adapters.refresh()
+        assert bluetooth_adapters.default_adapter == "bluetooth"
+        assert bluetooth_adapters.history == {}
+        assert bluetooth_adapters.adapters == {
+            "bluetooth": {
+                "address": "00:00:00:00:00:00",
+                "passive_scan": False,
+                "sw_version": "18.7.0",
+            }
+        }
