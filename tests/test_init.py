@@ -9,9 +9,11 @@ from usb_devices import BluetoothDevice, USBDevice
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
 from bluetooth_adapters import (
     DEFAULT_ADDRESS,
+    AdapterDetails,
     AdvertisementHistory,
     BlueZDBusObjects,
     adapter_human_name,
+    adapter_model,
     adapter_unique_name,
     get_adapters,
     get_bluetooth_adapters,
@@ -580,3 +582,32 @@ def test_adapter_unique_name():
     """Test adapter unique name."""
     assert adapter_unique_name("hci0", DEFAULT_ADDRESS) == "hci0"
     assert adapter_unique_name("hci0", "aa:bb:cc:dd:ee:ff") == "aa:bb:cc:dd:ee:ff"
+
+
+def test_adapter_model():
+    """Test adapter model."""
+    windows_details = AdapterDetails(
+        {
+            "address": "00:00:00:00:00:00",
+            "passive_scan": False,
+            "sw_version": "18.7.0",
+            "manufacturer": "Microsoft",
+            "product": "Unknown Windows Model",
+            "vendor_id": "Unknown",
+            "product_id": "Unknown",
+        }
+    )
+    assert adapter_model(windows_details) == "Unknown Windows Model"
+    linux_details = AdapterDetails(
+        {
+            "address": "00:1A:7D:DA:71:04",
+            "manufacturer": "XTech",
+            "product": "Bluetooth 4.0 USB Adapter",
+            "vendor_id": "0a12",
+            "product_id": "0001",
+            "hw_version": "usb:v1D6Bp0246d053F",
+            "passive_scan": False,
+            "sw_version": "homeassistant",
+        }
+    )
+    assert adapter_model(linux_details) == "Bluetooth 4.0 USB Adapter (0a12:0001)"
