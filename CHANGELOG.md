@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.0 (2022-11-27)
+### Feature
+* Detect vendor of uart bluetooth adapters by mac oui ([#30](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/30)) ([`12b1383`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/12b1383d249395526add62e6e6d6d7770fb4a401))
+
 ## v0.10.1 (2022-11-27)
 ### Fix
 * Bump usb-devices ([#28](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/28)) ([`9c1a8f8`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/9c1a8f8e852854ba0f6039aafd35632e361060a7))
