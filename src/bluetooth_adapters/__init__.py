@@ -27,7 +27,7 @@ from .models import (
     AdapterDetails,
 )
 from .systems import get_adapters
-from .util import adapter_human_name, adapter_unique_name
+from .util import adapter_human_name, adapter_model, adapter_unique_name
 
 __all__ = [
     "AdvertisementHistory",
@@ -35,6 +35,7 @@ __all__ = [
     "BlueZDBusObjects",
     "adapter_human_name",
     "adapter_unique_name",
+    "adapter_model",
     "get_bluetooth_adapters",
     "get_bluetooth_adapter_details",
     "get_dbus_managed_objects",
