@@ -33,6 +33,8 @@ async-timeout = ">=4.0.2"
 dbus-fast = ">=1.21.0"
 bleak = ">=0.15.1"
 usb-devices = ">=0.4.1"
+aiohttp = ">=3.8.1"
+mac-vendor-lookup = ">=0.1.12"
 
 [tool.poetry.extras]
 docs = [

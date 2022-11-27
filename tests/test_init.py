@@ -499,9 +499,7 @@ async def test_get_adapters_linux():
 
     with patch("platform.system", return_value="Linux"), patch(
         "bluetooth_adapters.dbus.MessageBus", MockMessageBus
-    ), patch("usb_devices.BluetoothDevice", MockBluetoothDevice), patch(
-        "usb_devices.USBDevice", MockUSBDevice
-    ):
+    ), patch("bluetooth_adapters.systems.linux.BluetoothDevice", MockBluetoothDevice):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
         assert bluetooth_adapters.default_adapter == "hci0"
@@ -514,6 +512,169 @@ async def test_get_adapters_linux():
             "hci0": {
                 "address": "00:1A:7D:DA:71:04",
                 "manufacturer": "XTech",
+                "product": "Bluetooth 4.0 USB Adapter",
+                "vendor_id": "0a12",
+                "product_id": "0001",
+                "hw_version": "usb:v1D6Bp0246d053F",
+                "passive_scan": False,
+                "sw_version": "homeassistant",
+            },
+        }
+
+
+@pytest.mark.asyncio
+async def test_get_adapters_linux_no_usb_device():
+    """Test get_adapters."""
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            return AsyncMock(
+                disconnect=MagicMock(),
+                call=AsyncMock(
+                    return_value=MagicMock(
+                        body=[
+                            {
+                                "/other": {},
+                                "/org/bluez/hci3": {
+                                    "org.bluez.Adapter1": {
+                                        "Address": "00:1A:7D:DA:71:04",
+                                        "AddressType": "public",
+                                        "Alias": "homeassistant",
+                                        "Class": 2883584,
+                                        "Discoverable": False,
+                                        "DiscoverableTimeout": 180,
+                                        "Discovering": True,
+                                        "Modalias": "usb:v1D6Bp0246d053F",
+                                        "Name": "homeassistant",
+                                        "Pairable": False,
+                                        "PairableTimeout": 0,
+                                        "Powered": True,
+                                        "Roles": ["central", "peripheral"],
+                                        "UUIDs": [
+                                            "0000110e-0000-1000-8000-00805f9b34fb",
+                                            "0000110a-0000-1000-8000-00805f9b34fb",
+                                            "00001200-0000-1000-8000-00805f9b34fb",
+                                            "0000110b-0000-1000-8000-00805f9b34fb",
+                                            "00001108-0000-1000-8000-00805f9b34fb",
+                                            "0000110c-0000-1000-8000-00805f9b34fb",
+                                            "00001800-0000-1000-8000-00805f9b34fb",
+                                            "00001801-0000-1000-8000-00805f9b34fb",
+                                            "0000180a-0000-1000-8000-00805f9b34fb",
+                                            "00001112-0000-1000-8000-00805f9b34fb",
+                                        ],
+                                    },
+                                    "org.bluez.GattManager1": {},
+                                    "org.bluez.LEAdvertisingManager1": {
+                                        "ActiveInstances": 0,
+                                        "SupportedIncludes": [
+                                            "tx-power",
+                                            "appearance",
+                                            "local-name",
+                                        ],
+                                        "SupportedInstances": 5,
+                                    },
+                                    "org.bluez.Media1": {},
+                                    "org.bluez.NetworkServer1": {},
+                                    "org.freedesktop.DBus.Introspectable": {},
+                                    "org.freedesktop.DBus.Properties": {},
+                                },
+                                "/org/bluez/hci4": {},
+                                "/org/bluez/hci5/any": {},
+                                "/org/bluez/hci3/dev_54_D2_72_AB_35_95": {
+                                    "org.freedesktop.DBus.Introspectable": {},
+                                    "org.bluez.Device1": {
+                                        "Address": "54:D2:72:AB:35:95",
+                                        "AddressType": "public",
+                                        "Name": "Nuki_1EAB3595",
+                                        "Alias": "Nuki_1EAB3595",
+                                        "Paired": False,
+                                        "Trusted": False,
+                                        "Blocked": False,
+                                        "LegacyPairing": False,
+                                        "RSSI": -78,
+                                        "Connected": False,
+                                        "UUIDs": [],
+                                        "Adapter": "/org/bluez/hci3",
+                                        "ManufacturerData": {
+                                            "76": b"\\x02\\x15\\xa9.\\xe2\\x00U\\x01\\x11\\xe4\\x91l\\x08\\x00 \\x0c\\x9af\\x1e\\xab5\\x95\\xc4"
+                                        },
+                                        "ServicesResolved": False,
+                                        "AdvertisingFlags": {
+                                            "__type": "<class 'bytearray'>",
+                                            "repr": "bytearray(b'\\x06')",
+                                        },
+                                    },
+                                    "org.freedesktop.DBus.Properties": {},
+                                },
+                                "/org/bluez/hci1/dev_54_D2_72_AB_35_95": {
+                                    "org.freedesktop.DBus.Introspectable": {},
+                                    "org.bluez.Device1": {
+                                        "Address": "54:D2:72:AB:35:95",
+                                        "AddressType": "public",
+                                        "Name": "Nuki_1EAB3595",
+                                        "Alias": "Nuki_1EAB3595",
+                                        "Paired": False,
+                                        "Trusted": False,
+                                        "Blocked": False,
+                                        "LegacyPairing": False,
+                                        "RSSI": -100,
+                                        "Connected": False,
+                                        "UUIDs": [],
+                                        "Adapter": "/org/bluez/hci0",
+                                        "ManufacturerData": {
+                                            "76": b"\\x02\\x15\\xa9.\\xe2\\x00U\\x01\\x11\\xe4\\x91l\\x08\\x00 \\x0c\\x9af\\x1e\\xab5\\x95\\xc4"
+                                        },
+                                        "ServicesResolved": False,
+                                        "AdvertisingFlags": {
+                                            "__type": "<class 'bytearray'>",
+                                            "repr": "bytearray(b'\\x06')",
+                                        },
+                                    },
+                                    "org.freedesktop.DBus.Properties": {},
+                                },
+                            }
+                        ],
+                        message_type=MessageType.METHOD_RETURN,
+                    )
+                ),
+            )
+
+    class NoMfrMockUSBDevice(USBDevice):
+        def __init__(self, *args, **kwargs):
+            self.manufacturer = None
+            self.product = "Bluetooth 4.0 USB Adapter"
+            self.vendor_id = "0a12"
+            self.product_id = "0001"
+            pass
+
+    class NoMfrMockBluetoothDevice(BluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = NoMfrMockUSBDevice()
+            pass
+
+        def setup(self, *args, **kwargs):
+            pass
+
+    with patch("platform.system", return_value="Linux"), patch(
+        "bluetooth_adapters.dbus.MessageBus", MockMessageBus
+    ), patch(
+        "bluetooth_adapters.systems.linux.BluetoothDevice", NoMfrMockBluetoothDevice
+    ):
+        bluetooth_adapters = get_adapters()
+        await bluetooth_adapters.refresh()
+        assert bluetooth_adapters.default_adapter == "hci0"
+        assert bluetooth_adapters.history == {
+            "54:D2:72:AB:35:95": AdvertisementHistory(
+                device=ANY, advertisement_data=ANY, source="hci3"
+            )
+        }
+        assert bluetooth_adapters.adapters == {
+            "hci3": {
+                "address": "00:1A:7D:DA:71:04",
+                "manufacturer": "cyber-blue(HK)Ltd",
                 "product": "Bluetooth 4.0 USB Adapter",
                 "vendor_id": "0a12",
                 "product_id": "0001",
