@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.0 (2022-11-27)
+### Feature
+* Add hardware info to adapter details ([#26](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/26)) ([`dc2682d`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/dc2682dff34c92654bab42c452125d8ae6c6a8be))
+
 ## v0.8.0 (2022-11-16)
 ### Feature
 * Add new multi platform adapter manager ([#23](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/23)) ([`58119d1`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/58119d1c6f08c9804809b8cc94220231f5bc636d))
