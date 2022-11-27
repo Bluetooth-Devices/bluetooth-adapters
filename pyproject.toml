@@ -32,6 +32,7 @@ myst-parser = {version = "^0.18", optional = true}
 async-timeout = ">=4.0.2"
 dbus-fast = ">=1.21.0"
 bleak = ">=0.15.1"
+usb-devices = ">=0.4.0"
 
 [tool.poetry.extras]
 docs = [

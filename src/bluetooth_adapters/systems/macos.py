@@ -16,6 +16,10 @@ class MacOSAdapters(BluetoothAdapters):
                 address=DEFAULT_ADDRESS,
                 sw_version=platform.release(),
                 passive_scan=False,
+                manufacturer="Apple",
+                product="Unknown MacOS Model",
+                vendor_id="Unknown",
+                product_id="Unknown",
             )
         }
 
