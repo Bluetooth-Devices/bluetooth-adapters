@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.0 (2022-11-27)
+### Feature
+* Export ADAPTER_ constants for the underlying usb device ([#27](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/27)) ([`f3f7619`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f3f76198d329794c00d921661215376bb20a3a1d))
+
 ## v0.9.0 (2022-11-27)
 ### Feature
 * Add hardware info to adapter details ([#26](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/26)) ([`dc2682d`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/dc2682dff34c92654bab42c452125d8ae6c6a8be))
