@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.1 (2022-11-27)
+### Fix
+* Bump usb-devices ([#28](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/28)) ([`9c1a8f8`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/9c1a8f8e852854ba0f6039aafd35632e361060a7))
+
 ## v0.10.0 (2022-11-27)
 ### Feature
 * Export ADAPTER_ constants for the underlying usb device ([#27](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/27)) ([`f3f7619`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f3f76198d329794c00d921661215376bb20a3a1d))
