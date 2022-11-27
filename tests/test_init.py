@@ -4,6 +4,7 @@ from unittest.mock import ANY, AsyncMock, MagicMock, patch
 
 import pytest
 from dbus_fast import MessageType
+from usb_devices import BluetoothDevice, USBDevice
 
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
 from bluetooth_adapters import (
@@ -478,8 +479,26 @@ async def test_get_adapters_linux():
                 ),
             )
 
+    class MockUSBDevice(USBDevice):
+        def __init__(self, *args, **kwargs):
+            self.manufacturer = "XTech"
+            self.product = "Bluetooth 4.0 USB Adapter"
+            self.vendor_id = "0a12"
+            self.product_id = "0001"
+            pass
+
+    class MockBluetoothDevice(BluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = MockUSBDevice()
+            pass
+
+        def setup(self, *args, **kwargs):
+            pass
+
     with patch("platform.system", return_value="Linux"), patch(
         "bluetooth_adapters.dbus.MessageBus", MockMessageBus
+    ), patch("usb_devices.BluetoothDevice", MockBluetoothDevice), patch(
+        "usb_devices.USBDevice", MockUSBDevice
     ):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
@@ -492,14 +511,10 @@ async def test_get_adapters_linux():
         assert bluetooth_adapters.adapters == {
             "hci0": {
                 "address": "00:1A:7D:DA:71:04",
-                "hw_version": "usb:v1D6Bp0246d053F",
-                "passive_scan": False,
-                "sw_version": "homeassistant",
-            },
-        }
-        assert bluetooth_adapters.adapters == {
-            "hci0": {
-                "address": "00:1A:7D:DA:71:04",
+                "manufacturer": "XTech",
+                "product": "Bluetooth 4.0 USB Adapter",
+                "vendor_id": "0a12",
+                "product_id": "0001",
                 "hw_version": "usb:v1D6Bp0246d053F",
                 "passive_scan": False,
                 "sw_version": "homeassistant",
@@ -523,6 +538,10 @@ async def test_get_adapters_macos():
                 "address": "00:00:00:00:00:00",
                 "passive_scan": False,
                 "sw_version": "18.7.0",
+                "manufacturer": "Apple",
+                "product": "Unknown MacOS Model",
+                "vendor_id": "Unknown",
+                "product_id": "Unknown",
             }
         }
 
@@ -543,6 +562,10 @@ async def test_get_adapters_windows():
                 "address": "00:00:00:00:00:00",
                 "passive_scan": False,
                 "sw_version": "18.7.0",
+                "manufacturer": "Microsoft",
+                "product": "Unknown Windows Model",
+                "vendor_id": "Unknown",
+                "product_id": "Unknown",
             }
         }
 

@@ -18,6 +18,10 @@ class WindowsAdapters(BluetoothAdapters):
                 address=DEFAULT_ADDRESS,
                 sw_version=platform.release(),
                 passive_scan=False,
+                manufacturer="Microsoft",
+                product="Unknown Windows Model",
+                vendor_id="Unknown",
+                product_id="Unknown",
             )
         }
 
