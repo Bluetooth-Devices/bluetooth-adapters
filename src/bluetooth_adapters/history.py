@@ -18,7 +18,7 @@ class AdvertisementHistory:
 
 
 def load_history_from_managed_objects(
-    managed_objects: dict[str, Any]
+    managed_objects: dict[str, Any], source_adapter: str | None = None
 ) -> dict[str, AdvertisementHistory]:
     """Load the history from the bus."""
     history: dict[str, AdvertisementHistory] = {}
@@ -38,6 +38,10 @@ def load_history_from_managed_objects(
 
         split_path = path_str.split("/")
         adapter = split_path[3]
+
+        if source_adapter and adapter != source_adapter:
+            continue
+
         uuids = props.get("UUIDs", [])
         manufacturer_data = {
             k: bytes(v) for k, v in props.get("ManufacturerData", {}).items()
