@@ -14,7 +14,7 @@ from .dbus import (
     get_bluetooth_adapters,
     get_dbus_managed_objects,
 )
-from .history import AdvertisementHistory
+from .history import AdvertisementHistory, load_history_from_managed_objects
 from .models import (
     ADAPTER_ADDRESS,
     ADAPTER_HW_VERSION,
@@ -40,6 +40,7 @@ __all__ = [
     "get_bluetooth_adapter_details",
     "get_dbus_managed_objects",
     "get_adapters",
+    "load_history_from_managed_objects",
     "AdapterDetails",
     "ADAPTER_ADDRESS",
     "ADAPTER_SW_VERSION",

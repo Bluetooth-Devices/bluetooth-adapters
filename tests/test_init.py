@@ -18,6 +18,7 @@ from bluetooth_adapters import (
     get_adapters,
     get_bluetooth_adapters,
     get_dbus_managed_objects,
+    load_history_from_managed_objects,
 )
 
 
@@ -359,6 +360,14 @@ async def test_BlueZDBusObjects():
             "54:D2:72:AB:35:95": AdvertisementHistory(ANY, ANY, "hci0")
         }
         assert bluez.history["54:D2:72:AB:35:95"].device.rssi == -78
+        assert (
+            len(
+                load_history_from_managed_objects(
+                    bluez.unpacked_managed_objects, "hci1"
+                )
+            )
+            == 1
+        )
 
 
 @pytest.mark.asyncio
