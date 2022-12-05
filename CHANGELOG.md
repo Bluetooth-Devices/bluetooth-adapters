@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.0 (2022-12-05)
+### Feature
+* Expose load_history_from_managed_objects ([#31](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/31)) ([`823daa8`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/823daa805b2c5d170485c2129403cf3612cd2378))
+
 ## v0.11.0 (2022-11-27)
 ### Feature
 * Detect vendor of uart bluetooth adapters by mac oui ([#30](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/30)) ([`12b1383`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/12b1383d249395526add62e6e6d6d7770fb4a401))
