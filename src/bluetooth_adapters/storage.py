@@ -57,6 +57,7 @@ MANUFACTURER_DATA: Final = "manufacturer_data"
 SERVICE_DATA: Final = "service_data"
 SERVICE_UUIDS: Final = "service_uuids"
 TX_POWER: Final = "tx_power"
+PLATFORM_DATA: Final = "platform_data"
 
 
 class AdvertisementDataDict(TypedDict):
@@ -68,6 +69,7 @@ class AdvertisementDataDict(TypedDict):
     service_uuids: list[str]
     rssi: int
     tx_power: int | None
+    platform_data: list[Any]
 
 
 class DiscoveredDeviceDict(TypedDict):
@@ -104,43 +106,36 @@ def expire_stale_scanner_discovered_device_advertisement_data(
 
 
 def discovered_device_advertisement_data_from_dict(
-    scanner_data: DiscoveredDeviceAdvertisementDataDict,
+    data: DiscoveredDeviceAdvertisementDataDict,
 ) -> DiscoveredDeviceAdvertisementData:
     """Build discovered_device_advertisement_data dict."""
     return DiscoveredDeviceAdvertisementData(
-        scanner_data[CONNECTABLE],
-        scanner_data[EXPIRE_SECONDS],
-        deserialize_discovered_device_advertisement_datas(
-            scanner_data[DISCOVERED_DEVICE_ADVERTISEMENT_DATAS]
+        data[CONNECTABLE],
+        data[EXPIRE_SECONDS],
+        _deserialize_discovered_device_advertisement_datas(
+            data[DISCOVERED_DEVICE_ADVERTISEMENT_DATAS]
         ),
-        deserialize_discovered_device_timestamps(
-            scanner_data[DISCOVERED_DEVICE_TIMESTAMPS]
-        ),
+        _deserialize_discovered_device_timestamps(data[DISCOVERED_DEVICE_TIMESTAMPS]),
     )
 
 
-def discovered_device_advertisement_data_dict_to_dict(
-    connectable: bool,
-    expire_seconds: float,
-    discovered_device_advertisement_datas: dict[
-        str, tuple[BLEDevice, AdvertisementData]
-    ],
-    discovered_device_timestamps: dict[str, float],
+def discovered_device_advertisement_data_to_dict(
+    data: DiscoveredDeviceAdvertisementData,
 ) -> DiscoveredDeviceAdvertisementDataDict:
     """Build discovered_device_advertisement_data dict."""
     return DiscoveredDeviceAdvertisementDataDict(
-        connectable=connectable,
-        expire_seconds=expire_seconds,
-        discovered_device_advertisement_datas=serialize_discovered_device_advertisement_datas(
-            discovered_device_advertisement_datas
+        connectable=data.connectable,
+        expire_seconds=data.expire_seconds,
+        discovered_device_advertisement_datas=_serialize_discovered_device_advertisement_datas(
+            data.discovered_device_advertisement_datas
         ),
-        discovered_device_timestamps=serialize_discovered_device_timestamps(
-            discovered_device_timestamps
+        discovered_device_timestamps=_serialize_discovered_device_timestamps(
+            data.discovered_device_timestamps
         ),
     )
 
 
-def serialize_discovered_device_advertisement_datas(
+def _serialize_discovered_device_advertisement_datas(
     discovered_device_advertisement_datas: dict[
         str, tuple[BLEDevice, AdvertisementData]
     ]
@@ -148,8 +143,8 @@ def serialize_discovered_device_advertisement_datas(
     """Serialize discovered_device_advertisement_datas."""
     return {
         address: DiscoveredDeviceDict(
-            device=ble_device_to_dict(device),
-            advertisement_data=advertisement_data_to_dict(advertisement_data),
+            device=_ble_device_to_dict(device),
+            advertisement_data=_advertisement_data_to_dict(advertisement_data),
         )
         for (
             address,
@@ -158,14 +153,14 @@ def serialize_discovered_device_advertisement_datas(
     }
 
 
-def deserialize_discovered_device_advertisement_datas(
+def _deserialize_discovered_device_advertisement_datas(
     discovered_device_advertisement_datas: dict[str, DiscoveredDeviceDict]
 ) -> dict[str, tuple[BLEDevice, AdvertisementData]]:
     """Deserialize discovered_device_advertisement_datas."""
     return {
         address: (
             BLEDevice(**device_advertisement_data["device"]),
-            advertisement_data_from_dict(
+            _advertisement_data_from_dict(
                 device_advertisement_data["advertisement_data"]
             ),
         )
@@ -176,7 +171,7 @@ def deserialize_discovered_device_advertisement_datas(
     }
 
 
-def ble_device_to_dict(ble_device: BLEDevice) -> BLEDeviceDict:
+def _ble_device_to_dict(ble_device: BLEDevice) -> BLEDeviceDict:
     """Serialize ble_device."""
     return BLEDeviceDict(
         address=ble_device.address,
@@ -186,7 +181,7 @@ def ble_device_to_dict(ble_device: BLEDevice) -> BLEDeviceDict:
     )
 
 
-def advertisement_data_from_dict(
+def _advertisement_data_from_dict(
     advertisement_data: AdvertisementDataDict,
 ) -> AdvertisementData:
     """Deserialize advertisement_data."""
@@ -205,11 +200,11 @@ def advertisement_data_from_dict(
         service_uuids=advertisement_data[SERVICE_UUIDS],
         rssi=advertisement_data[RSSI],
         tx_power=advertisement_data[TX_POWER],
-        platform_data=(),
+        platform_data=tuple(advertisement_data[PLATFORM_DATA]),
     )
 
 
-def advertisement_data_to_dict(
+def _advertisement_data_to_dict(
     advertisement_data: AdvertisementData,
 ) -> AdvertisementDataDict:
     """Serialize advertisement_data."""
@@ -226,30 +221,31 @@ def advertisement_data_to_dict(
         service_uuids=advertisement_data.service_uuids,
         rssi=advertisement_data.rssi,
         tx_power=advertisement_data.tx_power,
+        platform_data=list(advertisement_data.platform_data),
     )
 
 
-def get_monotonic_time_diff() -> float:
+def _get_monotonic_time_diff() -> float:
     """Get monotonic time diff."""
     return time.time() - time.monotonic()
 
 
-def deserialize_discovered_device_timestamps(
+def _deserialize_discovered_device_timestamps(
     discovered_device_timestamps: dict[str, float]
 ) -> dict[str, float]:
     """Deserialize discovered_device_timestamps."""
-    time_diff = get_monotonic_time_diff()
+    time_diff = _get_monotonic_time_diff()
     return {
         address: unix_time - time_diff
         for address, unix_time in discovered_device_timestamps.items()
     }
 
 
-def serialize_discovered_device_timestamps(
+def _serialize_discovered_device_timestamps(
     discovered_device_timestamps: dict[str, float]
 ) -> dict[str, float]:
     """Serialize discovered_device_timestamps."""
-    time_diff = get_monotonic_time_diff()
+    time_diff = _get_monotonic_time_diff()
     return {
         address: monotonic_time + time_diff
         for address, monotonic_time in discovered_device_timestamps.items()
