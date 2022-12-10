@@ -30,8 +30,8 @@ from .storage import (
     DiscoveredDeviceAdvertisementData,
     DiscoveredDeviceAdvertisementDataDict,
     DiscoveryStorageType,
-    discovered_device_advertisement_data_dict_to_dict,
     discovered_device_advertisement_data_from_dict,
+    discovered_device_advertisement_data_to_dict,
     expire_stale_scanner_discovered_device_advertisement_data,
 )
 from .systems import get_adapters
@@ -47,7 +47,7 @@ __all__ = [
     "adapter_human_name",
     "adapter_unique_name",
     "adapter_model",
-    "discovered_device_advertisement_data_dict_to_dict",
+    "discovered_device_advertisement_data_to_dict",
     "discovered_device_advertisement_data_from_dict",
     "expire_stale_scanner_discovered_device_advertisement_data",
     "get_bluetooth_adapters",
