@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.0 (2022-12-10)
+### Feature
+* Add storage to save and restore discovered devices ([#32](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/32)) ([`dc88a36`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/dc88a3620dac8ec8404e80c65631b366baebf85a))
+
 ## v0.12.0 (2022-12-05)
 ### Feature
 * Expose load_history_from_managed_objects ([#31](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/31)) ([`823daa8`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/823daa805b2c5d170485c2129403cf3612cd2378))
