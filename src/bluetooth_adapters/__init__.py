@@ -29,6 +29,7 @@ from .models import (
 from .storage import (
     DiscoveredDeviceAdvertisementData,
     DiscoveredDeviceAdvertisementDataDict,
+    DiscoveryStorageType,
     discovered_device_advertisement_data_dict_to_dict,
     discovered_device_advertisement_data_from_dict,
     expire_stale_scanner_discovered_device_advertisement_data,
@@ -42,6 +43,7 @@ __all__ = [
     "BlueZDBusObjects",
     "DiscoveredDeviceAdvertisementData",
     "DiscoveredDeviceAdvertisementDataDict",
+    "DiscoveryStorageType",
     "adapter_human_name",
     "adapter_unique_name",
     "adapter_model",

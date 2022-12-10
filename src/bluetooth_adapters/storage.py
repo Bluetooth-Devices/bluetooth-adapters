@@ -254,3 +254,6 @@ def serialize_discovered_device_timestamps(
         address: monotonic_time + time_diff
         for address, monotonic_time in discovered_device_timestamps.items()
     }
+
+
+DiscoveryStorageType = dict[str, DiscoveredDeviceAdvertisementDataDict]
