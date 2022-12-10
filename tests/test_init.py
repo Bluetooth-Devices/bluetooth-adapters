@@ -896,6 +896,7 @@ def test_discovered_device_advertisement_data_from_dict():
         platform_data=("Test Device", ""),
         rssi=-50,
     )
+    assert result is not None
     out_ble_device = result.discovered_device_advertisement_datas["AA:BB:CC:DD:EE:FF"][
         0
     ]
@@ -1012,3 +1013,35 @@ def test_expire_stale_scanner_discovered_device_advertisement_data():
         not in data["myscanner"]["discovered_device_advertisement_datas"]
     )
     assert "all_expired" not in data
+
+
+def test_discovered_device_advertisement_data_from_dict_corrupt(caplog):
+    """Test discovered_device_advertisement_data_from_dict with corrupt data."""
+    now = time.time()
+    result = discovered_device_advertisement_data_from_dict(
+        {
+            "connectable": True,
+            "discovered_device_advertisement_datas": {
+                "AA:BB:CC:DD:EE:FF": {
+                    "advertisement_data": {  # type: ignore[typeddict-item]
+                        "local_name": "Test " "Device",
+                        "manufacturer_data": {"76": "0215aabbccddeeff"},
+                        "rssi": -50,
+                        "service_data": {
+                            "0000180d-0000-1000-8000-00805f9b34fb": "00000000"
+                        },
+                        "service_uuids": ["0000180d-0000-1000-8000-00805f9b34fb"],
+                    },
+                    "device": {  # type: ignore[typeddict-item]
+                        "address": "AA:BB:CC:DD:EE:FF",
+                        "details": {"details": "test"},
+                        "rssi": -50,
+                    },
+                }
+            },
+            "discovered_device_timestamps": {"AA:BB:CC:DD:EE:FF": now},
+            "expire_seconds": 100,
+        }
+    )
+    assert result is None
+    assert "Error deserializing discovered_device_advertisement_data" in caplog.text

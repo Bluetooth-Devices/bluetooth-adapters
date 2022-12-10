@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 import time
 from dataclasses import dataclass
 from typing import Any, Final, TypedDict
 
 from bleak.backends.device import BLEDevice
 from bleak.backends.scanner import AdvertisementData
+
+_LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -107,16 +110,25 @@ def expire_stale_scanner_discovered_device_advertisement_data(
 
 def discovered_device_advertisement_data_from_dict(
     data: DiscoveredDeviceAdvertisementDataDict,
-) -> DiscoveredDeviceAdvertisementData:
+) -> DiscoveredDeviceAdvertisementData | None:
     """Build discovered_device_advertisement_data dict."""
-    return DiscoveredDeviceAdvertisementData(
-        data[CONNECTABLE],
-        data[EXPIRE_SECONDS],
-        _deserialize_discovered_device_advertisement_datas(
-            data[DISCOVERED_DEVICE_ADVERTISEMENT_DATAS]
-        ),
-        _deserialize_discovered_device_timestamps(data[DISCOVERED_DEVICE_TIMESTAMPS]),
-    )
+    try:
+        return DiscoveredDeviceAdvertisementData(
+            data[CONNECTABLE],
+            data[EXPIRE_SECONDS],
+            _deserialize_discovered_device_advertisement_datas(
+                data[DISCOVERED_DEVICE_ADVERTISEMENT_DATAS]
+            ),
+            _deserialize_discovered_device_timestamps(
+                data[DISCOVERED_DEVICE_TIMESTAMPS]
+            ),
+        )
+    except Exception as err:  # pylint: disable=broad-except
+        _LOGGER.exception(
+            "Error deserializing discovered_device_advertisement_data, adapter startup will be slow: %s",
+            err,
+        )
+    return None
 
 
 def discovered_device_advertisement_data_to_dict(
