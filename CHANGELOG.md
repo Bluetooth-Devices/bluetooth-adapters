@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.0 (2022-12-10)
+### Feature
+* Cleanup new storage apis and add coverage ([#33](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/33)) ([`07cfbdf`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/07cfbdfdc03f1065978c57e9097b1c07326ab781))
+
 ## v0.13.0 (2022-12-10)
 ### Feature
 * Add storage to save and restore discovered devices ([#32](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/32)) ([`dc88a36`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/dc88a3620dac8ec8404e80c65631b366baebf85a))
