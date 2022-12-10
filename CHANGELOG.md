@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.1 (2022-12-10)
+### Fix
+* Handle data corruption ([#34](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/34)) ([`77f2e9b`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/77f2e9b3f7a5012ddb3c78e3529a7f01146f74b6))
+
 ## v0.14.0 (2022-12-10)
 ### Feature
 * Cleanup new storage apis and add coverage ([#33](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/33)) ([`07cfbdf`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/07cfbdfdc03f1065978c57e9097b1c07326ab781))
