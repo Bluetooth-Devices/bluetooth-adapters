@@ -26,6 +26,14 @@ from .models import (
     ADAPTER_VENDOR_ID,
     AdapterDetails,
 )
+from .storage import (
+    DiscoveredDeviceAdvertisementData,
+    DiscoveredDeviceAdvertisementDataDict,
+    DiscoveryStorageType,
+    discovered_device_advertisement_data_dict_to_dict,
+    discovered_device_advertisement_data_from_dict,
+    expire_stale_scanner_discovered_device_advertisement_data,
+)
 from .systems import get_adapters
 from .util import adapter_human_name, adapter_model, adapter_unique_name
 
@@ -33,9 +41,15 @@ __all__ = [
     "AdvertisementHistory",
     "BluetoothAdapters",
     "BlueZDBusObjects",
+    "DiscoveredDeviceAdvertisementData",
+    "DiscoveredDeviceAdvertisementDataDict",
+    "DiscoveryStorageType",
     "adapter_human_name",
     "adapter_unique_name",
     "adapter_model",
+    "discovered_device_advertisement_data_dict_to_dict",
+    "discovered_device_advertisement_data_from_dict",
+    "expire_stale_scanner_discovered_device_advertisement_data",
     "get_bluetooth_adapters",
     "get_bluetooth_adapter_details",
     "get_dbus_managed_objects",
