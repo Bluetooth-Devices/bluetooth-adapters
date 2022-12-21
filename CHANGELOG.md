@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.0 (2022-12-21)
+### Feature
+* Add connection_slots to AdapterDetails ([#35](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/35)) ([`c0a7b52`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/c0a7b52835cf8c7a68c54e483fa86436ea0c3342))
+
 ## v0.14.1 (2022-12-10)
 ### Fix
 * Handle data corruption ([#34](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/34)) ([`77f2e9b`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/77f2e9b3f7a5012ddb3c78e3529a7f01146f74b6))
