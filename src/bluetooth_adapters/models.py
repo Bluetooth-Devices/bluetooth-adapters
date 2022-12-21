@@ -16,6 +16,7 @@ class AdapterDetails(TypedDict, total=False):
     vendor_id: str | None
     product_id: str | None
     passive_scan: bool
+    connections_slots: int | None
 
 
 ADAPTER_ADDRESS: Final = "address"
@@ -26,3 +27,4 @@ ADAPTER_MANUFACTURER: Final = "manufacturer"
 ADAPTER_PRODUCT: Final = "product"
 ADAPTER_VENDOR_ID: Final = "vendor_id"
 ADAPTER_PRODUCT_ID: Final = "product_id"
+ADAPTER_CONNECTIONS_SLOTS: Final = "connections_slots"

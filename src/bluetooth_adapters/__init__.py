@@ -57,6 +57,7 @@ __all__ = [
     "load_history_from_managed_objects",
     "AdapterDetails",
     "ADAPTER_ADDRESS",
+    "ADAPTER_CONNECTIONS_SLOTS",
     "ADAPTER_SW_VERSION",
     "ADAPTER_HW_VERSION",
     "ADAPTER_PASSIVE_SCAN",
@@ -68,4 +69,5 @@ __all__ = [
     "MACOS_DEFAULT_BLUETOOTH_ADAPTER",
     "UNIX_DEFAULT_BLUETOOTH_ADAPTER",
     "DEFAULT_ADDRESS",
+    "DEFAULT_CONNECTION_SLOTS",
 ]

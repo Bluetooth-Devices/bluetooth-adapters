@@ -8,3 +8,5 @@ UNIX_DEFAULT_BLUETOOTH_ADAPTER: Final = "hci0"
 
 # Some operating systems hide the adapter address for privacy reasons (ex MacOS)
 DEFAULT_ADDRESS: Final = "00:00:00:00:00:00"
+
+DEFAULT_CONNECTION_SLOTS: Final = 5
