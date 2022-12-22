@@ -4,6 +4,7 @@ __version__ = "0.15.0"
 from .adapters import BluetoothAdapters
 from .const import (
     DEFAULT_ADDRESS,
+    DEFAULT_CONNECTION_SLOTS,
     MACOS_DEFAULT_BLUETOOTH_ADAPTER,
     UNIX_DEFAULT_BLUETOOTH_ADAPTER,
     WINDOWS_DEFAULT_BLUETOOTH_ADAPTER,
@@ -57,7 +58,7 @@ __all__ = [
     "load_history_from_managed_objects",
     "AdapterDetails",
     "ADAPTER_ADDRESS",
-    "ADAPTER_CONNECTIONS_SLOTS",
+    "ADAPTER_CONNECTION_SLOTS",
     "ADAPTER_SW_VERSION",
     "ADAPTER_HW_VERSION",
     "ADAPTER_PASSIVE_SCAN",
