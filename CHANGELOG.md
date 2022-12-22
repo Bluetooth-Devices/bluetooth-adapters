@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.1 (2022-12-22)
+### Fix
+* Align naming with Home Assistant for new connection slots code ([#36](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/36)) ([`0605de5`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/0605de55906b5025cb49eab18bd3bfe8e344ffd1))
+
 ## v0.15.0 (2022-12-21)
 ### Feature
 * Add connection_slots to AdapterDetails ([#35](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/35)) ([`c0a7b52`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/c0a7b52835cf8c7a68c54e483fa86436ea0c3342))
