@@ -18,6 +18,7 @@ from .dbus import (
 from .history import AdvertisementHistory, load_history_from_managed_objects
 from .models import (
     ADAPTER_ADDRESS,
+    ADAPTER_CONNECTION_SLOTS,
     ADAPTER_HW_VERSION,
     ADAPTER_MANUFACTURER,
     ADAPTER_PASSIVE_SCAN,
