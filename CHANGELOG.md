@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.3 (2023-03-18)
+### Fix
+* Update for bleak 0.20 ([#39](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/39)) ([`1e18be2`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/1e18be264b1fcac131ca6fcc4b7418d04c92c6ee))
+* Fix CI ([#43](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/43)) ([`f43d748`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f43d748cb200a3151b840b280d167fdfdbfc5772))
+
 ## v0.15.2 (2022-12-22)
 ### Fix
 * Missing ADAPTER_CONNECTION_SLOTS from __all__ ([#38](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/38)) ([`d2bed5e`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/d2bed5ef0c4fb9e31e31011544815599c5b81b4a))
