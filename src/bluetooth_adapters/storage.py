@@ -155,7 +155,7 @@ def _serialize_discovered_device_advertisement_datas(
     """Serialize discovered_device_advertisement_datas."""
     return {
         address: DiscoveredDeviceDict(
-            device=_ble_device_to_dict(device),
+            device=_ble_device_to_dict(device, advertisement_data),
             advertisement_data=_advertisement_data_to_dict(advertisement_data),
         )
         for (
@@ -183,12 +183,14 @@ def _deserialize_discovered_device_advertisement_datas(
     }
 
 
-def _ble_device_to_dict(ble_device: BLEDevice) -> BLEDeviceDict:
+def _ble_device_to_dict(
+    ble_device: BLEDevice, advertisement_data: AdvertisementData
+) -> BLEDeviceDict:
     """Serialize ble_device."""
     return BLEDeviceDict(
         address=ble_device.address,
         name=ble_device.name,
-        rssi=ble_device.rssi,
+        rssi=advertisement_data.rssi,  # For backwards compatibility
         details=ble_device.details,
     )
 
