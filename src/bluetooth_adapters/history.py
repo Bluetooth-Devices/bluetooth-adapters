@@ -33,7 +33,9 @@ def load_history_from_managed_objects(
         address = props["Address"]
         rssi = props.get("RSSI", MIN_RSSI)
 
-        if (prev_history := history.get(address)) and prev_history.device.rssi >= rssi:
+        if (
+            prev_history := history.get(address)
+        ) and prev_history.advertisement_data.rssi >= rssi:
             continue
 
         split_path = path_str.split("/")
