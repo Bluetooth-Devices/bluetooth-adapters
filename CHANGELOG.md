@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.4 (2023-05-09)
+### Fix
+* Don't import from dbus module on Windows ([#57](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/57)) ([`f936758`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/f936758748fc7ec4829f91dcf600e4fbf9f354b5))
+
 ## v0.15.3 (2023-03-18)
 ### Fix
 * Update for bleak 0.20 ([#39](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/39)) ([`1e18be2`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/1e18be264b1fcac131ca6fcc4b7418d04c92c6ee))
