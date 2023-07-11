@@ -77,7 +77,7 @@ hci_dev_info_p = ctypes.POINTER(hci_dev_info)
 def get_adapters_from_hci() -> dict[int, dict[str, Any]]:
     """Get bluetooth adapters from HCI."""
     out: dict[int, dict[str, Any]] = {}
-
+    sock: socket.socket | None = None
     try:
         sock = socket.socket(AF_BLUETOOTH, socket.SOCK_RAW, BTPROTO_HCI)
         buf = hci_dev_list_req()
@@ -101,5 +101,6 @@ def get_adapters_from_hci() -> dict[int, dict[str, Any]]:
         _LOGGER.exception("Unexpected error while getting HCI devices: %s", error)
         return out
     finally:
-        sock.close()
+        if sock:
+            sock.close()
     return out
