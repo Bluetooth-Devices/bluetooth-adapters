@@ -20,14 +20,8 @@ class hci_dev_req(ctypes.Structure):
     _fields_ = [("dev_id", ctypes.c_uint16), ("dev_opt", ctypes.c_uint32)]
 
 
-hci_dev_req_p = ctypes.POINTER(hci_dev_req)
-
-
 class hci_dev_list_req(ctypes.Structure):
     _fields_ = [("dev_num", ctypes.c_uint16), ("dev_req", hci_dev_req * HCI_MAX_DEV)]
-
-
-hci_dev_list_p = ctypes.POINTER(hci_dev_list_req)
 
 
 class bdaddr_t(ctypes.Structure):
