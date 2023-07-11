@@ -11,7 +11,6 @@ MIN_RSSI = -127
 
 @dataclass
 class AdvertisementHistory:
-
     device: BLEDevice
     advertisement_data: AdvertisementData
     source: str

@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
+from typing import Any
 
 import aiohttp
 import async_timeout
@@ -14,6 +15,7 @@ from ..const import UNIX_DEFAULT_BLUETOOTH_ADAPTER
 from ..dbus import BlueZDBusObjects
 from ..history import AdvertisementHistory
 from ..models import AdapterDetails
+from .linux_hci import get_adapters_from_hci
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,6 +29,7 @@ class LinuxAdapters(BluetoothAdapters):
         self._adapters: dict[str, AdapterDetails] | None = None
         self._devices: dict[str, BluetoothDevice] = {}
         self._mac_vendor_lookup: AsyncMacLookup | None = None
+        self._hci_output: dict[int, dict[str, Any]] | None = None
 
     async def refresh(self) -> None:
         """Refresh the adapters."""
@@ -57,6 +60,7 @@ class LinuxAdapters(BluetoothAdapters):
 
     def _create_bluetooth_devices(self) -> None:
         """Create the bluetooth devices."""
+        self._hci_output = get_adapters_from_hci()
         self._devices = {}
         for adapter in self._bluez.adapter_details:
             i = int(adapter[3:])
@@ -81,6 +85,21 @@ class LinuxAdapters(BluetoothAdapters):
         """Get the adapter details."""
         if self._adapters is None:
             adapters: dict[str, AdapterDetails] = {}
+            if self._hci_output:
+                for hci_details in self._hci_output.values():
+                    name = hci_details["name"]
+                    mac_address = hci_details["bdaddr"].upper()
+                    manufacturer = self._async_get_vendor(mac_address)
+                    adapters[name] = AdapterDetails(
+                        address=mac_address,
+                        sw_version="Unknown",
+                        hw_version=None,
+                        passive_scan=False,  # assume false if we don't know
+                        manufacturer=manufacturer,
+                        product=None,
+                        vendor_id=None,
+                        product_id=None,
+                    )
             adapter_details = self._bluez.adapter_details
             for adapter, details in adapter_details.items():
                 if not (adapter1 := details.get("org.bluez.Adapter1")):
