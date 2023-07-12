@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.0 (2023-07-12)
+
+### Feature
+
+* Add get_adapters_from_hci ([#74](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/74)) ([`9801501`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/9801501fa294dc46bc40fe215a79fca7021ec571))
+
 ## v0.15.5 (2023-07-12)
 
 ### Fix
