@@ -1,6 +1,8 @@
 """Utils."""
 from __future__ import annotations
 
+import sys
+
 from .const import DEFAULT_ADDRESS
 from .models import (
     ADAPTER_PRODUCT,
@@ -8,6 +10,11 @@ from .models import (
     ADAPTER_VENDOR_ID,
     AdapterDetails,
 )
+
+if sys.version_info[:2] < (3, 11):
+    from async_timeout import timeout as asyncio_timeout  # noqa: F401
+else:
+    from asyncio import timeout as asyncio_timeout  # noqa: F401
 
 
 def adapter_human_name(adapter: str, address: str) -> str:

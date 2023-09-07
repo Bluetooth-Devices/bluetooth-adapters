@@ -6,7 +6,6 @@ import logging
 from typing import Any
 
 import aiohttp
-import async_timeout
 from mac_vendor_lookup import AsyncMacLookup
 from usb_devices import BluetoothDevice, NotAUSBDeviceError
 
@@ -15,6 +14,7 @@ from ..const import UNIX_DEFAULT_BLUETOOTH_ADAPTER
 from ..dbus import BlueZDBusObjects
 from ..history import AdvertisementHistory
 from ..models import AdapterDetails
+from ..util import asyncio_timeout
 from .linux_hci import get_adapters_from_hci
 
 _LOGGER = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class LinuxAdapters(BluetoothAdapters):
         ):
             # We don't care if this fails since it only
             # improves the data we get.
-            async with async_timeout.timeout(3):
+            async with asyncio_timeout(3):
                 await self._mac_vendor_lookup.load_vendors()
 
     def _async_get_vendor(self, mac_address: str) -> str | None:

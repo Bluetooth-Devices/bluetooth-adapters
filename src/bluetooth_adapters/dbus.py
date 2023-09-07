@@ -6,11 +6,11 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
-import async_timeout
 from dbus_fast import BusType, Message, MessageType, unpack_variants
 from dbus_fast.aio import MessageBus
 
 from .history import AdvertisementHistory, load_history_from_managed_objects
+from .util import asyncio_timeout
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -133,7 +133,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         member="GetManagedObjects",
     )
     try:
-        async with async_timeout.timeout(REPLY_TIMEOUT):
+        async with asyncio_timeout(REPLY_TIMEOUT):
             reply = await bus.call(msg)
     except EOFError as ex:
         _LOGGER.debug("DBus connection closed: %s", ex)
