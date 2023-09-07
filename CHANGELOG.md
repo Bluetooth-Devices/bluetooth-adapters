@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.1 (2023-09-07)
+
+### Fix
+
+* Ensure timeouts work with py3.11 ([#89](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/89)) ([`fb9e2b5`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/fb9e2b571f85e2f5fbef88ad8b651a119d58384a))
+
 ## v0.16.0 (2023-07-12)
 
 ### Feature
