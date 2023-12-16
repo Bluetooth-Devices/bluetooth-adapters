@@ -1,5 +1,6 @@
 import asyncio
 import time
+from platform import system
 from typing import Any
 from unittest.mock import ANY, AsyncMock, MagicMock, patch
 
@@ -15,11 +16,18 @@ except (AttributeError, ImportError):
 from usb_devices import BluetoothDevice, USBDevice
 
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
+
+if system() != "Windows":
+    from bluetooth_adapters import (
+        BlueZDBusObjects,
+        get_bluetooth_adapters,
+        get_dbus_managed_objects,
+    )
+
 from bluetooth_adapters import (
     DEFAULT_ADDRESS,
     AdapterDetails,
     AdvertisementHistory,
-    BlueZDBusObjects,
     DiscoveredDeviceAdvertisementData,
     DiscoveredDeviceAdvertisementDataDict,
     adapter_human_name,
@@ -29,8 +37,6 @@ from bluetooth_adapters import (
     discovered_device_advertisement_data_to_dict,
     expire_stale_scanner_discovered_device_advertisement_data,
     get_adapters,
-    get_bluetooth_adapters,
-    get_dbus_managed_objects,
     load_history_from_managed_objects,
 )
 
