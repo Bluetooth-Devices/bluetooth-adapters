@@ -950,6 +950,7 @@ def test_discovered_device_advertisement_data_from_dict():
     )
 
 
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 def test_expire_stale_scanner_discovered_device_advertisement_data():
     """Test expire_stale_scanner_discovered_device_advertisement_data."""
     now = time.time()
