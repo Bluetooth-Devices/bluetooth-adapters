@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.2 (2023-12-16)
+
+### Fix
+
+* Workaround fcntl and dbus_fast not available on windows ([#102](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/102)) ([`0c48649`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/0c4864943966cdaab44259bfc6b8236f7695e9b6))
+
 ## v0.16.1 (2023-09-07)
 
 ### Fix
