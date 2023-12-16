@@ -52,8 +52,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: snok/install-poetry@v1
       - name: Install Dependencies
+        shell: bash
         run: poetry install
       - name: Test with Pytest
+        shell: bash
         run: poetry run pytest --cov-report=xml
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
