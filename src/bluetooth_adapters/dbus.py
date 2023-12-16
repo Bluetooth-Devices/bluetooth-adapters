@@ -6,8 +6,17 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
-from dbus_fast import BusType, Message, MessageType, unpack_variants
-from dbus_fast.aio import MessageBus
+try:
+    from dbus_fast import BusType, Message, MessageType, unpack_variants
+    from dbus_fast.aio import MessageBus
+except (AttributeError, ImportError):
+    # dbus_fast is not available on Windows
+    BusType = None
+    Message = None
+    MessageType = None
+    unpack_variants = None
+    MessageBus = None
+
 
 from .history import AdvertisementHistory, load_history_from_managed_objects
 from .util import asyncio_timeout

@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 import ctypes
-import fcntl
+
+try:
+    import fcntl
+except ImportError:
+    # fcntl is not available on Windows
+    fcntl = None  # type: ignore
 import logging
 import socket
 from typing import Any
@@ -70,6 +75,8 @@ hci_dev_info_p = ctypes.POINTER(hci_dev_info)
 
 def get_adapters_from_hci() -> dict[int, dict[str, Any]]:
     """Get bluetooth adapters from HCI."""
+    if not fcntl:
+        raise RuntimeError("fcntl is not available")
     out: dict[int, dict[str, Any]] = {}
     sock: socket.socket | None = None
     try:

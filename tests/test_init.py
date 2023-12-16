@@ -1,20 +1,33 @@
 import asyncio
 import time
+from platform import system
 from typing import Any
 from unittest.mock import ANY, AsyncMock, MagicMock, patch
 
 import pytest
 from bleak.backends.device import BLEDevice
 from bleak.backends.scanner import AdvertisementData
-from dbus_fast import MessageType
+
+try:
+    from dbus_fast import MessageType
+except (AttributeError, ImportError):
+    MessageType = None
+    # dbus_fast is not available on Windows
 from usb_devices import BluetoothDevice, USBDevice
 
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
+
+if system() != "Windows":
+    from bluetooth_adapters import (
+        BlueZDBusObjects,
+        get_bluetooth_adapters,
+        get_dbus_managed_objects,
+    )
+
 from bluetooth_adapters import (
     DEFAULT_ADDRESS,
     AdapterDetails,
     AdvertisementHistory,
-    BlueZDBusObjects,
     DiscoveredDeviceAdvertisementData,
     DiscoveredDeviceAdvertisementDataDict,
     adapter_human_name,
@@ -24,13 +37,12 @@ from bluetooth_adapters import (
     discovered_device_advertisement_data_to_dict,
     expire_stale_scanner_discovered_device_advertisement_data,
     get_adapters,
-    get_bluetooth_adapters,
-    get_dbus_managed_objects,
     load_history_from_managed_objects,
 )
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_file_not_found():
     """Test get_bluetooth_adapters()."""
 
@@ -43,6 +55,7 @@ async def test_get_bluetooth_adapters_file_not_found():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_connection_refused():
     """Test get_bluetooth_adapters with connection refused."""
 
@@ -55,6 +68,7 @@ async def test_get_bluetooth_adapters_connection_refused():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_connect_refused_docker():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -73,6 +87,7 @@ async def test_get_bluetooth_adapters_connect_refused_docker():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_connect_fails():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -89,6 +104,7 @@ async def test_get_bluetooth_adapters_connect_fails():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_connect_fails_docker():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -107,6 +123,7 @@ async def test_get_bluetooth_adapters_connect_fails_docker():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_connect_broken_pipe():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -123,6 +140,7 @@ async def test_get_bluetooth_adapters_connect_broken_pipe():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_connect_broken_pipe_docker():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -141,6 +159,7 @@ async def test_get_bluetooth_adapters_connect_broken_pipe_docker():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_connect_eof_error():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -159,6 +178,7 @@ async def test_get_bluetooth_adapters_connect_eof_error():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_no_call_return():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -175,6 +195,7 @@ async def test_get_bluetooth_adapters_no_call_return():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_times_out():
     async def _stall(*args: Any) -> None:
         await asyncio.sleep(10)
@@ -196,6 +217,7 @@ async def test_get_bluetooth_adapters_times_out():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_no_wrong_return():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -223,6 +245,7 @@ async def test_get_bluetooth_adapters_no_wrong_return():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_bluetooth_adapters_correct_return_valid_message():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -251,6 +274,7 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_dbus_managed_objects():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -284,6 +308,7 @@ async def test_get_dbus_managed_objects():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_BlueZDBusObjects():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -379,6 +404,7 @@ async def test_BlueZDBusObjects():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_adapters_linux():
     """Test get_adapters."""
 
@@ -540,6 +566,7 @@ async def test_get_adapters_linux():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 async def test_get_adapters_linux_no_usb_device():
     """Test get_adapters."""
 
@@ -923,6 +950,7 @@ def test_discovered_device_advertisement_data_from_dict():
     )
 
 
+@pytest.mark.skipif(MessageType is None, reason="dbus_fast is not available")
 def test_expire_stale_scanner_discovered_device_advertisement_data():
     """Test expire_stale_scanner_discovered_device_advertisement_data."""
     now = time.time()

@@ -1215,13 +1215,13 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "usb-devices"
-version = "0.4.1"
+version = "0.4.5"
 description = "Tools for mapping, describing, and resetting USB devices"
 optional = false
 python-versions = ">=3.9,<4.0"
 files = [
-    {file = "usb_devices-0.4.1-py3-none-any.whl", hash = "sha256:7a4afd5b7cf2306c8afa52d43bdd8ae9667e32f09e57f12adf048bb490ff3512"},
-    {file = "usb_devices-0.4.1.tar.gz", hash = "sha256:2ad810ba1fd29817d014fe244179fbd06866b92a3285e2bb3a8442f99a8e47b6"},
+    {file = "usb_devices-0.4.5-py3-none-any.whl", hash = "sha256:8a415219ef1395e25aa0bddcad484c88edf9673acdeae8a07223ca7222a01dcf"},
+    {file = "usb_devices-0.4.5.tar.gz", hash = "sha256:9b5c7606df2bc791c6c45b7f76244a0cbed83cb6fa4c68791a143c03345e195d"},
 ]
 
 [[package]]
@@ -1317,4 +1317,4 @@ docs = ["Sphinx", "myst-parser", "sphinx-rtd-theme"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "450ace08c9a95ffae734365b4acaa5f0bef9b2796808e25434788c38811b90ea"
+content-hash = "e800a03b2a3e69100b9e673e89d3cd31fa189ed927dad77d19c35a3fde9abbdc"
