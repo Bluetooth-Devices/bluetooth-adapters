@@ -9,7 +9,7 @@ from bleak.backends.scanner import AdvertisementData
 
 try:
     from dbus_fast import MessageType
-except ImportError:
+except (AttributeError, ImportError):
     MessageType = None
     # dbus_fast is not available on Windows
 from usb_devices import BluetoothDevice, USBDevice

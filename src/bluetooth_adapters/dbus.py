@@ -9,7 +9,7 @@ from typing import Any
 try:
     from dbus_fast import BusType, Message, MessageType, unpack_variants
     from dbus_fast.aio import MessageBus
-except ImportError:
+except (AttributeError, ImportError):
     # dbus_fast is not available on Windows
     BusType = None
     Message = None
