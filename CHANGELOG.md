@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.0 (2024-01-04)
+
+### Feature
+
+* Ignore adapters with a 00:00:00:00:00:00 mac address ([#105](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/105)) ([`cdca7b2`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/cdca7b2b8e115cdc44011c8959f76c4870213695))
+* Py312 support ([#107](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/107)) ([`4b14786`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/4b14786585d42593a96fde057fb22c8064cf6914))
+
 ## v0.16.2 (2023-12-16)
 
 ### Fix
