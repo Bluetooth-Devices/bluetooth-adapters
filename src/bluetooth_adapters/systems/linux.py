@@ -10,7 +10,7 @@ from mac_vendor_lookup import AsyncMacLookup
 from usb_devices import BluetoothDevice, NotAUSBDeviceError
 
 from ..adapters import BluetoothAdapters
-from ..const import UNIX_DEFAULT_BLUETOOTH_ADAPTER
+from ..const import EMPTY_MAC_ADDRESS, UNIX_DEFAULT_BLUETOOTH_ADAPTER
 from ..dbus import BlueZDBusObjects
 from ..history import AdvertisementHistory
 from ..models import AdapterDetails
@@ -104,9 +104,13 @@ class LinuxAdapters(BluetoothAdapters):
             for adapter, details in adapter_details.items():
                 if not (adapter1 := details.get("org.bluez.Adapter1")):
                     continue
+                mac_address = adapter1["Address"]
+                if mac_address == EMPTY_MAC_ADDRESS:
+                    # Ignore adapters with 00:00:00:00:00:00 address
+                    # https://github.com/home-assistant/operating-system/issues/2944
+                    continue
                 device = self._devices[adapter]
                 usb_device = device.usb_device
-                mac_address = adapter1["Address"]
                 if (
                     usb_device is None
                     or usb_device.vendor_id == usb_device.manufacturer
