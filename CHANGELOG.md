@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.0 (2024-02-24)
+
+### Feature
+
+* Switch to using aiooui for mac lookups ([#115](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/115)) ([`6934ad8`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/6934ad806d06efa073437dc4dd44807e6623829c))
+
 ## v0.17.0 (2024-01-04)
 
 ### Feature
