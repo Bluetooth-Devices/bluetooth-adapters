@@ -30,18 +30,14 @@ class LinuxAdapters(BluetoothAdapters):
     async def refresh(self) -> None:
         """Refresh the adapters."""
         loop = asyncio.get_running_loop()
-        coros = [
-            self._bluez.load(),
-            loop.run_in_executor(None, self._create_bluetooth_devices),
-        ]
+        load_task = asyncio.create_task(self._bluez.load())
+        adapters_from_hci_future = loop.run_in_executor(None, get_adapters_from_hci)
+        futures: list[asyncio.Future[Any]] = [load_task, adapters_from_hci_future]
         if not aiooui.is_loaded():
-            coros.append(aiooui.async_load())
-        await asyncio.gather(*coros)
-        self._adapters = None
-
-    def _create_bluetooth_devices(self) -> None:
-        """Create the bluetooth devices."""
-        self._hci_output = get_adapters_from_hci()
+            futures.append(aiooui.async_load())
+        await asyncio.gather(*futures)
+        self._hci_output = await adapters_from_hci_future
+        self._adapters = None  # clear cache
         self._devices = {}
         for adapter in self._bluez.adapter_details:
             i = int(adapter[3:])
