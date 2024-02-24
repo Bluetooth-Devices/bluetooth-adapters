@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import asyncio
-import contextlib
 import logging
 from typing import Any
 
-import aiohttp
-from mac_vendor_lookup import AsyncMacLookup
+import aiooui
 from usb_devices import BluetoothDevice, NotAUSBDeviceError
 
 from ..adapters import BluetoothAdapters
@@ -14,7 +12,6 @@ from ..const import EMPTY_MAC_ADDRESS, UNIX_DEFAULT_BLUETOOTH_ADAPTER
 from ..dbus import BlueZDBusObjects
 from ..history import AdvertisementHistory
 from ..models import AdapterDetails
-from ..util import asyncio_timeout
 from .linux_hci import get_adapters_from_hci
 
 _LOGGER = logging.getLogger(__name__)
@@ -28,39 +25,19 @@ class LinuxAdapters(BluetoothAdapters):
         self._bluez = BlueZDBusObjects()
         self._adapters: dict[str, AdapterDetails] | None = None
         self._devices: dict[str, BluetoothDevice] = {}
-        self._mac_vendor_lookup: AsyncMacLookup | None = None
         self._hci_output: dict[int, dict[str, Any]] | None = None
 
     async def refresh(self) -> None:
         """Refresh the adapters."""
-        await self._bluez.load()
-        await asyncio.get_running_loop().run_in_executor(
-            None, self._create_bluetooth_devices
-        )
-        if not self._mac_vendor_lookup:
-            await self._async_setup()
-        self._adapters = None
-
-    async def _async_setup(self) -> None:
-        self._mac_vendor_lookup = AsyncMacLookup()
-        with contextlib.suppress(
-            asyncio.TimeoutError, aiohttp.ClientError, asyncio.TimeoutError
-        ):
-            # We don't care if this fails since it only
-            # improves the data we get.
-            async with asyncio_timeout(3):
-                await self._mac_vendor_lookup.load_vendors()
-
-    def _async_get_vendor(self, mac_address: str) -> str | None:
-        """Lookup the vendor."""
-        assert self._mac_vendor_lookup is not None  # nosec
-        oui = self._mac_vendor_lookup.sanitise(mac_address)[:6]
-        vendor: bytes | None = self._mac_vendor_lookup.prefixes.get(oui.encode())
-        return vendor.decode()[:254] if vendor is not None else None
-
-    def _create_bluetooth_devices(self) -> None:
-        """Create the bluetooth devices."""
-        self._hci_output = get_adapters_from_hci()
+        loop = asyncio.get_running_loop()
+        load_task = asyncio.create_task(self._bluez.load())
+        adapters_from_hci_future = loop.run_in_executor(None, get_adapters_from_hci)
+        futures: list[asyncio.Future[Any]] = [load_task, adapters_from_hci_future]
+        if not aiooui.is_loaded():
+            futures.append(aiooui.async_load())
+        await asyncio.gather(*futures)
+        self._hci_output = await adapters_from_hci_future
+        self._adapters = None  # clear cache
         self._devices = {}
         for adapter in self._bluez.adapter_details:
             i = int(adapter[3:])
@@ -89,7 +66,7 @@ class LinuxAdapters(BluetoothAdapters):
                 for hci_details in self._hci_output.values():
                     name = hci_details["name"]
                     mac_address = hci_details["bdaddr"].upper()
-                    manufacturer = self._async_get_vendor(mac_address)
+                    manufacturer = aiooui.get_vendor(mac_address)
                     adapters[name] = AdapterDetails(
                         address=mac_address,
                         sw_version="Unknown",
@@ -117,7 +94,7 @@ class LinuxAdapters(BluetoothAdapters):
                     or usb_device.manufacturer is None
                     or usb_device.manufacturer == "Unknown"
                 ):
-                    manufacturer = self._async_get_vendor(mac_address)
+                    manufacturer = aiooui.get_vendor(mac_address)
                 else:
                     manufacturer = usb_device.manufacturer
                 adapters[adapter] = AdapterDetails(
