@@ -67,18 +67,23 @@ class LinuxAdapters(BluetoothAdapters):
     @property
     def adapters(self) -> dict[str, AdapterDetails]:
         """Get the adapter details."""
+        manufacturer: str | None
         if self._adapters is None:
             adapters: dict[str, AdapterDetails] = {}
             if self._hci_output:
                 for hci_details in self._hci_output.values():
                     name = hci_details["name"]
                     mac_address = hci_details["bdaddr"].upper()
+                    if mac_address == EMPTY_MAC_ADDRESS:
+                        manufacturer = None
+                    else:
+                        manufacturer = aiooui.get_vendor(mac_address)
                     adapters[name] = AdapterDetails(
                         address=mac_address,
                         sw_version="Unknown",
                         hw_version=None,
                         passive_scan=False,  # assume false if we don't know
-                        manufacturer=aiooui.get_vendor(mac_address),
+                        manufacturer=manufacturer,
                         product=None,
                         vendor_id=None,
                         product_id=None,
@@ -90,7 +95,7 @@ class LinuxAdapters(BluetoothAdapters):
                 mac_address = adapter1["Address"]
                 device = self._devices[adapter]
                 product: str | None = None
-                manufacturer: str | None = None
+                manufacturer = None
                 vendor_id: str | None = None
                 product_id: str | None = None
                 if isinstance(device, USBBluetoothDevice):
