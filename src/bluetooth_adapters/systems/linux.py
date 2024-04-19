@@ -5,7 +5,10 @@ import logging
 from typing import Any
 
 import aiooui
-from usb_devices import BluetoothDevice, NotAUSBDeviceError
+from uart_devices import BluetoothDevice as UARTBluetoothDevice
+from uart_devices import NotAUARTDeviceError
+from usb_devices import BluetoothDevice as USBBluetoothDevice
+from usb_devices import NotAUSBDeviceError
 
 from ..adapters import BluetoothAdapters
 from ..const import EMPTY_MAC_ADDRESS, UNIX_DEFAULT_BLUETOOTH_ADAPTER
@@ -24,7 +27,7 @@ class LinuxAdapters(BluetoothAdapters):
         """Initialize the adapter."""
         self._bluez = BlueZDBusObjects()
         self._adapters: dict[str, AdapterDetails] | None = None
-        self._devices: dict[str, BluetoothDevice] = {}
+        self._devices: dict[str, UARTBluetoothDevice | USBBluetoothDevice] = {}
         self._hci_output: dict[int, dict[str, Any]] | None = None
 
     async def refresh(self) -> None:
@@ -41,16 +44,20 @@ class LinuxAdapters(BluetoothAdapters):
         self._devices = {}
         for adapter in self._bluez.adapter_details:
             i = int(adapter[3:])
-            dev = BluetoothDevice(i)
-            self._devices[adapter] = dev
-            try:
-                dev.setup()
-            except NotAUSBDeviceError:
-                continue
-            except FileNotFoundError:
-                continue
-            except Exception:  # pylint: disable=broad-except
-                _LOGGER.exception("Unexpected error setting up device hci%s", dev)
+            for cls in (USBBluetoothDevice, UARTBluetoothDevice):
+                dev = cls(i)
+                self._devices[adapter] = dev
+                try:
+                    dev.setup()
+                except (NotAUARTDeviceError, NotAUSBDeviceError):
+                    continue
+                except FileNotFoundError:
+                    break
+                except Exception:  # pylint: disable=broad-except
+                    _LOGGER.exception("Unexpected error setting up device hci%s", dev)
+                    break
+                else:
+                    break
 
     @property
     def history(self) -> dict[str, AdvertisementHistory]:
@@ -66,13 +73,12 @@ class LinuxAdapters(BluetoothAdapters):
                 for hci_details in self._hci_output.values():
                     name = hci_details["name"]
                     mac_address = hci_details["bdaddr"].upper()
-                    manufacturer = aiooui.get_vendor(mac_address)
                     adapters[name] = AdapterDetails(
                         address=mac_address,
                         sw_version="Unknown",
                         hw_version=None,
                         passive_scan=False,  # assume false if we don't know
-                        manufacturer=manufacturer,
+                        manufacturer=aiooui.get_vendor(mac_address),
                         product=None,
                         vendor_id=None,
                         product_id=None,
@@ -82,30 +88,44 @@ class LinuxAdapters(BluetoothAdapters):
                 if not (adapter1 := details.get("org.bluez.Adapter1")):
                     continue
                 mac_address = adapter1["Address"]
-                if mac_address == EMPTY_MAC_ADDRESS:
-                    # Ignore adapters with 00:00:00:00:00:00 address
-                    # https://github.com/home-assistant/operating-system/issues/2944
-                    continue
                 device = self._devices[adapter]
-                usb_device = device.usb_device
-                if (
-                    usb_device is None
-                    or usb_device.vendor_id == usb_device.manufacturer
-                    or usb_device.manufacturer is None
-                    or usb_device.manufacturer == "Unknown"
-                ):
-                    manufacturer = aiooui.get_vendor(mac_address)
-                else:
-                    manufacturer = usb_device.manufacturer
+                product: str | None = None
+                manufacturer: str | None = None
+                vendor_id: str | None = None
+                product_id: str | None = None
+                if isinstance(device, USBBluetoothDevice):
+                    usb_device = device.usb_device
+                    if mac_address != EMPTY_MAC_ADDRESS and (
+                        usb_device is None
+                        or usb_device.vendor_id == usb_device.manufacturer
+                        or usb_device.manufacturer is None
+                        or usb_device.manufacturer == "Unknown"
+                    ):
+                        manufacturer = aiooui.get_vendor(mac_address)
+                    else:
+                        manufacturer = usb_device.manufacturer
+                    product = usb_device.product
+                    vendor_id = usb_device.vendor_id
+                    product_id = usb_device.product_id
+                elif isinstance(device, UARTBluetoothDevice):
+                    uart_device = device.uart_device
+                    if mac_address == EMPTY_MAC_ADDRESS:
+                        manufacturer = uart_device.manufacturer
+                    else:
+                        manufacturer = (
+                            aiooui.get_vendor(mac_address) or uart_device.manufacturer
+                        )
+                    product = uart_device.product
+
                 adapters[adapter] = AdapterDetails(
                     address=mac_address,
                     sw_version=adapter1["Name"],  # This is actually the BlueZ version
                     hw_version=adapter1.get("Modalias"),
                     passive_scan="org.bluez.AdvertisementMonitorManager1" in details,
                     manufacturer=manufacturer,
-                    product=usb_device.product if usb_device else None,
-                    vendor_id=usb_device.vendor_id if usb_device else None,
-                    product_id=usb_device.product_id if usb_device else None,
+                    product=product,
+                    vendor_id=vendor_id,
+                    product_id=product_id,
                 )
             self._adapters = adapters
         return self._adapters

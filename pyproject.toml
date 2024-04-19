@@ -34,6 +34,7 @@ dbus-fast = ">=1.21.0"
 bleak = ">=0.21.1"
 usb-devices = ">=0.4.5"
 aiooui = ">=0.1.1"
+uart-devices = ">=0.1.0"
 
 [tool.poetry.extras]
 docs = [
