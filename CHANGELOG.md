@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.0 (2024-04-19)
+
+### Feature
+
+* Improve adapter data with UART devices ([#124](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/124)) ([`5db938f`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/5db938f16b3d1c6f4b5dbd9a988bafd8cbf06b1e))
+
 ## v0.18.0 (2024-02-24)
 
 ### Feature
