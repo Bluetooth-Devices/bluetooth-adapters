@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.1 (2024-04-30)
+
+### Fix
+
+* Handle missing hci devices when enumerating adapters ([#129](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/129)) ([`95759e7`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/95759e78176cb83dfae2ea2b8bd98dfc80b652ae))
+
 ## v0.19.0 (2024-04-19)
 
 ### Feature
