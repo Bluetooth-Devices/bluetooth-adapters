@@ -98,8 +98,9 @@ class LinuxAdapters(BluetoothAdapters):
                 manufacturer = None
                 vendor_id: str | None = None
                 product_id: str | None = None
-                if isinstance(device, USBBluetoothDevice):
-                    usb_device = device.usb_device
+                if isinstance(device, USBBluetoothDevice) and (
+                    usb_device := device.usb_device
+                ):
                     if mac_address != EMPTY_MAC_ADDRESS and (
                         usb_device is None
                         or usb_device.vendor_id == usb_device.manufacturer
@@ -112,8 +113,9 @@ class LinuxAdapters(BluetoothAdapters):
                     product = usb_device.product
                     vendor_id = usb_device.vendor_id
                     product_id = usb_device.product_id
-                elif isinstance(device, UARTBluetoothDevice):
-                    uart_device = device.uart_device
+                elif isinstance(device, UARTBluetoothDevice) and (
+                    uart_device := device.uart_device
+                ):
                     if mac_address == EMPTY_MAC_ADDRESS:
                         manufacturer = uart_device.manufacturer
                     else:
@@ -121,6 +123,8 @@ class LinuxAdapters(BluetoothAdapters):
                             aiooui.get_vendor(mac_address) or uart_device.manufacturer
                         )
                     product = uart_device.product
+                elif mac_address != EMPTY_MAC_ADDRESS:
+                    manufacturer = aiooui.get_vendor(mac_address)
 
                 adapters[adapter] = AdapterDetails(
                     address=mac_address,
