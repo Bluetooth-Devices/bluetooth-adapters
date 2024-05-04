@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.2 (2024-05-04)
+
+### Fix
+
+* Handle AuthError while probing for adapters ([#130](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/130)) ([`aec92f3`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/aec92f32493637a237c3c8490b689b13da20b93f))
+
 ## v0.19.1 (2024-04-30)
 
 ### Fix
