@@ -11,12 +11,12 @@ try:
     from dbus_fast.aio import MessageBus
 except (AttributeError, ImportError):
     # dbus_fast is not available on Windows
-    AuthError = None
-    BusType = None
-    Message = None
-    MessageType = None
-    unpack_variants = None
-    MessageBus = None
+    AuthError = None  # pragma: no cover
+    BusType = None  # pragma: no cover
+    Message = None  # pragma: no cover
+    MessageType = None  # pragma: no cover
+    unpack_variants = None  # pragma: no cover
+    MessageBus = None  # pragma: no cover
 
 
 from .history import AdvertisementHistory, load_history_from_managed_objects
