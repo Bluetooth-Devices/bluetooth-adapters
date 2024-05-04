@@ -9,9 +9,10 @@ from bleak.backends.device import BLEDevice
 from bleak.backends.scanner import AdvertisementData
 
 try:
-    from dbus_fast import MessageType
+    from dbus_fast import AuthError, MessageType
 except (AttributeError, ImportError):
     MessageType = None
+    AuthError = None
     # dbus_fast is not available on Windows
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
 from uart_devices import UARTDevice
@@ -75,6 +76,22 @@ async def test_get_bluetooth_adapters_connection_refused():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
             raise ConnectionRefusedError
+
+    with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
+        assert await get_bluetooth_adapters() == []
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_get_bluetooth_adapters_auth_eror():
+    """Test get_bluetooth_adapters with auth error."""
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            raise AuthError
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == []

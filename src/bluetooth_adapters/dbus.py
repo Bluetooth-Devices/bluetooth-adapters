@@ -7,15 +7,16 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from dbus_fast import BusType, Message, MessageType, unpack_variants
+    from dbus_fast import AuthError, BusType, Message, MessageType, unpack_variants
     from dbus_fast.aio import MessageBus
 except (AttributeError, ImportError):
     # dbus_fast is not available on Windows
-    BusType = None
-    Message = None
-    MessageType = None
-    unpack_variants = None
-    MessageBus = None
+    AuthError = None  # pragma: no cover
+    BusType = None  # pragma: no cover
+    Message = None  # pragma: no cover
+    MessageType = None  # pragma: no cover
+    unpack_variants = None  # pragma: no cover
+    MessageBus = None  # pragma: no cover
 
 
 from .history import AdvertisementHistory, load_history_from_managed_objects
@@ -101,6 +102,13 @@ async def get_dbus_managed_objects() -> dict[str, Any]:
 async def _get_dbus_managed_objects() -> dict[str, Any]:
     try:
         bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
+    except AuthError as ex:
+        _LOGGER.warning(
+            "DBus authentication error; make sure the DBus socket "
+            "is available and the user has the correct permissions: %s",
+            ex,
+        )
+        return {}
     except FileNotFoundError as ex:
         if is_docker_env():
             _LOGGER.debug(
