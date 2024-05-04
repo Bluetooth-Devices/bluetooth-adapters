@@ -57,6 +57,11 @@ build_command = "pip install poetry && poetry build"
 [tool.pytest.ini_options]
 addopts = "-v -Wdefault --cov=bluetooth_adapters --cov-report=term-missing:skip-covered"
 pythonpath = ["src"]
+log_format = "%(asctime)s.%(msecs)03d %(levelname)-8s %(threadName)s %(name)s:%(filename)s:%(lineno)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+asyncio_mode = "auto"
+log_cli = "true"
+log_level = "NOTSET"
 
 [tool.coverage.run]
 branch = true
