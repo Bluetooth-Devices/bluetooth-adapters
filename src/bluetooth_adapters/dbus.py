@@ -103,7 +103,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
     try:
         bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
     except AuthError as ex:
-        _LOGGER.debug(
+        _LOGGER.warning(
             "DBus authentication error; make sure the DBus socket "
             "is available and the user has the correct permissions: %s",
             ex,
