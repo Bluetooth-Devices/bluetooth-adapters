@@ -2,14 +2,14 @@
 
 [[package]]
 name = "aiooui"
-version = "0.1.5"
+version = "0.1.6"
 description = "Async OUI lookups"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "<4.0,>=3.9"
 files = [
-    {file = "aiooui-0.1.5-cp310-cp310-manylinux_2_31_x86_64.whl", hash = "sha256:e03f77f1b0c1ed775404792dec321f2e11740aa4b3c142e6890b3902502d6444"},
-    {file = "aiooui-0.1.5-py3-none-any.whl", hash = "sha256:f92e485a9d2fb7aea5b626c107485517ff93dc2507d957dcc24bd60c2024b19e"},
-    {file = "aiooui-0.1.5.tar.gz", hash = "sha256:68015a428c46521cdf82896d920376ebac885711a937179cf1deca20b8e1f3ea"},
+    {file = "aiooui-0.1.6-cp310-cp310-manylinux_2_31_x86_64.whl", hash = "sha256:033b4ce268a77b9dd122c07d45cb5b737a9c7c59b1b81cd9e4123c7d82d429f6"},
+    {file = "aiooui-0.1.6-py3-none-any.whl", hash = "sha256:7fe914c214dc48b3d466e396bb2a0bd9872d416ff27b4d8351aed9e5d2b14be2"},
+    {file = "aiooui-0.1.6.tar.gz", hash = "sha256:078c2def77fedb1f28f6f74d1435e39b8e545be423cc1175560b8279bf93bc64"},
 ]
 
 [[package]]
@@ -408,7 +408,7 @@ files = [
 name = "jinja2"
 version = "3.1.4"
 description = "A very fast and expressive template engine."
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "jinja2-3.1.4-py3-none-any.whl", hash = "sha256:bc5dd2abb727a5319567b7a813e6a2e7318c39f4f487cfe6c89c6f9c7d25197d"},
@@ -449,7 +449,7 @@ testing = ["coverage", "pytest", "pytest-cov", "pytest-regressions"]
 name = "markupsafe"
 version = "2.1.5"
 description = "Safely add untrusted strings to HTML/XML markup."
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "MarkupSafe-2.1.5-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:a17a92de5231666cfbe003f0e4b9b3a7ae3afb1ec2845aadc2bacc93ff85febc"},
@@ -1036,7 +1036,7 @@ files = [
 name = "urllib3"
 version = "2.2.2"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
-optional = false
+optional = true
 python-versions = ">=3.8"
 files = [
     {file = "urllib3-2.2.2-py3-none-any.whl", hash = "sha256:a448b2f64d686155468037e1ace9f2d2199776e17f0a46610480d311f73e3472"},
