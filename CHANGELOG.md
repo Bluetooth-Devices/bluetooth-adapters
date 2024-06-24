@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.3 (2024-06-24)
+
+### Fix
+
+* Fix license classifier ([#141](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/141)) ([`b3d7010`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/b3d70101ca83ed844ec12c5c0e980bfe29a30fef))
+
 ## v0.19.2 (2024-05-04)
 
 ### Fix
