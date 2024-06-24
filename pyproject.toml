@@ -3,7 +3,6 @@ name = "bluetooth-adapters"
 version = "0.19.2"
 description = "Tools to enumerate and find Bluetooth Adapters"
 authors = ["J. Nick Koston <nick@koston.org>"]
-license = "Apache Software License 2.0"
 readme = "README.md"
 repository = "https://github.com/bluetooth-devices/bluetooth-adapters"
 documentation = "https://bluetooth-adapters.readthedocs.io"
@@ -13,6 +12,7 @@ classifiers = [
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries",
+    "License :: OSI Approved :: Apache Software License",
 ]
 packages = [
     { include = "bluetooth_adapters", from = "src" },
