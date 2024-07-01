@@ -1,4 +1,5 @@
 """Base class for Bluetooth adapters."""
+
 from __future__ import annotations
 
 from abc import abstractproperty
