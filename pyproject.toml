@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bluetooth-adapters"
-version = "0.19.3"
+version = "0.19.4"
 description = "Tools to enumerate and find Bluetooth Adapters"
 authors = ["J. Nick Koston <nick@koston.org>"]
 readme = "README.md"

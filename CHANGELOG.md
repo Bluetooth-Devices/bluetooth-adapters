@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.4 (2024-08-16)
+
+### Fix
+
+* Run device refresh in the executor ([#156](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/156)) ([`7fc4a3a`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/7fc4a3ac57b4e3e3ace97829804eded8f1f63b5c))
+
 ## v0.19.3 (2024-06-24)
 
 ### Fix
