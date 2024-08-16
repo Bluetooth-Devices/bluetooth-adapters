@@ -42,6 +42,10 @@ class LinuxAdapters(BluetoothAdapters):
         self._hci_output = await adapters_from_hci_future
         self._adapters = None  # clear cache
         self._devices = {}
+        await loop.run_in_executor(None, self._refresh_devices)
+
+    def _refresh_devices(self) -> None:
+        """Refresh the devices."""
         for adapter in self._bluez.adapter_details:
             i = int(adapter[3:])
             for cls in (USBBluetoothDevice, UARTBluetoothDevice):
