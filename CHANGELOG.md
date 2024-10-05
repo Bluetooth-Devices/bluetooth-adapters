@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.0 (2024-10-05)
+
+### Feature
+
+* Add support for Python 3.13 ([#163](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/163)) ([`65b76f3`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/65b76f3b2f3380421ca7f4e7e275034181cbb69e))
+
 ## v0.19.4 (2024-08-16)
 
 ### Fix
