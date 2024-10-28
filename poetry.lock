@@ -2,14 +2,14 @@
 
 [[package]]
 name = "aiooui"
-version = "0.1.6"
+version = "0.1.7"
 description = "Async OUI lookups"
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "aiooui-0.1.6-cp310-cp310-manylinux_2_31_x86_64.whl", hash = "sha256:033b4ce268a77b9dd122c07d45cb5b737a9c7c59b1b81cd9e4123c7d82d429f6"},
-    {file = "aiooui-0.1.6-py3-none-any.whl", hash = "sha256:7fe914c214dc48b3d466e396bb2a0bd9872d416ff27b4d8351aed9e5d2b14be2"},
-    {file = "aiooui-0.1.6.tar.gz", hash = "sha256:078c2def77fedb1f28f6f74d1435e39b8e545be423cc1175560b8279bf93bc64"},
+    {file = "aiooui-0.1.7-cp310-cp310-manylinux_2_31_x86_64.whl", hash = "sha256:8bb53e015a6e78e10bc36957733ca84714885361c4c4b9a5262e9ad3db83c333"},
+    {file = "aiooui-0.1.7-py3-none-any.whl", hash = "sha256:fb9ffbf061e84d9bc638f53205a2844d00da6839ad758afa91269b49ee927013"},
+    {file = "aiooui-0.1.7.tar.gz", hash = "sha256:b390c9e602de1faecf3c1f0b98270a95e2d00a4da208a62d507a9635ab8a5d05"},
 ]
 
 [[package]]
