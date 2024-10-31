@@ -74,7 +74,7 @@ def _adapters_from_managed_objects(
         # check that path is exactly /org/bluez/hci<integer>
         if not path_str.startswith("/org/bluez/hci"):
             continue
-        if not path_str[15:].isdigit():
+        if not path_str[14:].isdigit():
             continue
         split_path = path_str.split("/")
         adapter = split_path[3]
