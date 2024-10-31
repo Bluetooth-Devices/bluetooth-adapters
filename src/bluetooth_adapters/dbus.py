@@ -75,7 +75,7 @@ def _adapters_from_managed_objects(
         if not path_str.startswith("/org/bluez/hci"):
             continue
         try:
-            int(path_str[15:])
+            int(path_str[14:])
         except ValueError:
             continue
         split_path = path_str.split("/")
