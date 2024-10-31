@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import re
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -72,7 +71,12 @@ def _adapters_from_managed_objects(
     adapters: dict[str, dict[str, Any]] = {}
     for path, unpacked_data in managed_objects.items():
         path_str = str(path)
-        if not re.match(r"/org/bluez/hci\d+$", path_str):
+        # check that path is exactly /org/bluez/hci<integer>
+        if not path_str.startswith("/org/bluez/hci"):
+            continue
+        try: 
+            int(path_str[15:]) 
+        except ValueError:
             continue
         split_path = path_str.split("/")
         adapter = split_path[3]
