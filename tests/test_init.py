@@ -712,7 +712,6 @@ async def test_get_adapters_linux():
         # hci1 is empty so it should not be in the list
         # hci2 should not show as 00:00:00:00:00:00 are filtered downstream now
         # hci3 should show
-        print(bluetooth_adapters.adapters)
         assert bluetooth_adapters.adapters == {
             "hci0": {
                 "address": "00:1A:7D:DA:71:04",
