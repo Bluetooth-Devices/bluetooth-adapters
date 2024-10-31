@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.1 (2024-10-31)
+
+### Fix
+
+* Handle devices listed before adapter in dbus managed objects ([#174](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/174)) ([`69b0d16`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/69b0d1683381de1ead4efb80e6d4a31170138f2e))
+
 ## v0.20.0 (2024-10-05)
 
 ### Feature
