@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import re
 from functools import cache
 from pathlib import Path
 from typing import Any
-import re
 
 try:
     from dbus_fast import AuthError, BusType, Message, MessageType, unpack_variants
