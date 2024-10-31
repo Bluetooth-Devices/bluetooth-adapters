@@ -71,11 +71,15 @@ def _adapters_from_managed_objects(
     adapters: dict[str, dict[str, Any]] = {}
     for path, unpacked_data in managed_objects.items():
         path_str = str(path)
-        if path_str.startswith("/org/bluez/hci"):
-            split_path = path_str.split("/")
-            adapter = split_path[3]
-            if adapter not in adapters:
-                adapters[adapter] = unpacked_data
+        # check that path is exactly /org/bluez/hci<integer>
+        if not path_str.startswith("/org/bluez/hci"):
+            continue
+        if not path_str[14:].isdigit():
+            continue
+        split_path = path_str.split("/")
+        adapter = split_path[3]
+        if adapter not in adapters:
+            adapters[adapter] = unpacked_data
     return adapters
 
 
