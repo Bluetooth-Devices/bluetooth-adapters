@@ -489,6 +489,32 @@ async def test_get_adapters_linux():
                         body=[
                             {
                                 "/other": {},
+                                "/org/bluez/hci0/dev_54_D2_72_AB_35_95": {
+                                    "org.freedesktop.DBus.Introspectable": {},
+                                    "org.bluez.Device1": {
+                                        "Address": "54:D2:72:AB:35:95",
+                                        "AddressType": "public",
+                                        "Name": "Nuki_1EAB3595",
+                                        "Alias": "Nuki_1EAB3595",
+                                        "Paired": False,
+                                        "Trusted": False,
+                                        "Blocked": False,
+                                        "LegacyPairing": False,
+                                        "RSSI": -78,
+                                        "Connected": False,
+                                        "UUIDs": [],
+                                        "Adapter": "/org/bluez/hci0",
+                                        "ManufacturerData": {
+                                            "76": b"\\x02\\x15\\xa9.\\xe2\\x00U\\x01\\x11\\xe4\\x91l\\x08\\x00 \\x0c\\x9af\\x1e\\xab5\\x95\\xc4"
+                                        },
+                                        "ServicesResolved": False,
+                                        "AdvertisingFlags": {
+                                            "__type": "<class 'bytearray'>",
+                                            "repr": "bytearray(b'\\x06')",
+                                        },
+                                    },
+                                    "org.freedesktop.DBus.Properties": {},
+                                },
                                 "/org/bluez/hci0": {
                                     "org.bluez.Adapter1": {
                                         "Address": "00:1A:7D:DA:71:04",
@@ -620,32 +646,6 @@ async def test_get_adapters_linux():
                                     "org.freedesktop.DBus.Properties": {},
                                 },
                                 "/org/bluez/hci1/any": {},
-                                "/org/bluez/hci0/dev_54_D2_72_AB_35_95": {
-                                    "org.freedesktop.DBus.Introspectable": {},
-                                    "org.bluez.Device1": {
-                                        "Address": "54:D2:72:AB:35:95",
-                                        "AddressType": "public",
-                                        "Name": "Nuki_1EAB3595",
-                                        "Alias": "Nuki_1EAB3595",
-                                        "Paired": False,
-                                        "Trusted": False,
-                                        "Blocked": False,
-                                        "LegacyPairing": False,
-                                        "RSSI": -78,
-                                        "Connected": False,
-                                        "UUIDs": [],
-                                        "Adapter": "/org/bluez/hci0",
-                                        "ManufacturerData": {
-                                            "76": b"\\x02\\x15\\xa9.\\xe2\\x00U\\x01\\x11\\xe4\\x91l\\x08\\x00 \\x0c\\x9af\\x1e\\xab5\\x95\\xc4"
-                                        },
-                                        "ServicesResolved": False,
-                                        "AdvertisingFlags": {
-                                            "__type": "<class 'bytearray'>",
-                                            "repr": "bytearray(b'\\x06')",
-                                        },
-                                    },
-                                    "org.freedesktop.DBus.Properties": {},
-                                },
                                 "/org/bluez/hci1/dev_54_D2_72_AB_35_95": {
                                     "org.freedesktop.DBus.Introspectable": {},
                                     "org.bluez.Device1": {
@@ -712,6 +712,7 @@ async def test_get_adapters_linux():
         # hci1 is empty so it should not be in the list
         # hci2 should not show as 00:00:00:00:00:00 are filtered downstream now
         # hci3 should show
+        print(bluetooth_adapters.adapters)
         assert bluetooth_adapters.adapters == {
             "hci0": {
                 "address": "00:1A:7D:DA:71:04",

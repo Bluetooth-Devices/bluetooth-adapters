@@ -5,6 +5,7 @@ import logging
 from functools import cache
 from pathlib import Path
 from typing import Any
+import re
 
 try:
     from dbus_fast import AuthError, BusType, Message, MessageType, unpack_variants
@@ -71,11 +72,12 @@ def _adapters_from_managed_objects(
     adapters: dict[str, dict[str, Any]] = {}
     for path, unpacked_data in managed_objects.items():
         path_str = str(path)
-        if path_str.startswith("/org/bluez/hci"):
-            split_path = path_str.split("/")
-            adapter = split_path[3]
-            if adapter not in adapters:
-                adapters[adapter] = unpacked_data
+        if not re.match(r"/org/bluez/hci\d+$", path_str):
+            continue
+        split_path = path_str.split("/")
+        adapter = split_path[3]
+        if adapter not in adapters:
+            adapters[adapter] = unpacked_data
     return adapters
 
 
