@@ -745,6 +745,7 @@ async def test_get_adapters_linux():
             },
         }
 
+
 @pytest.mark.asyncio
 @pytest.mark.skipif(
     MessageType is None or get_dbus_managed_objects is None,
