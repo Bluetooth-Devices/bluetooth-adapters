@@ -96,13 +96,26 @@ def expire_stale_scanner_discovered_device_advertisement_data(
             DISCOVERED_DEVICE_ADVERTISEMENT_DATAS
         ]
         for address, timestamp in timestamps.items():
-            if now - timestamp > expire_seconds:
+            time_diff = now - timestamp
+            if time_diff > expire_seconds:
+                expire.append(address)
+            elif time_diff < 0:
+                _LOGGER.warning(
+                    "Discarding timestamp %s for %s on scanner %s as it is the future (now = %s)",
+                    timestamp,
+                    address,
+                    scanner,
+                    now,
+                )
                 expire.append(address)
         for address in expire:
             del timestamps[address]
             del discovered_device_advertisement_datas[address]
         if not timestamps:
             expired_scanners.append(scanner)
+        _LOGGER.debug(
+            "Loaded %s fresh discovered devices for %s", len(timestamps), scanner
+        )
 
     for scanner in expired_scanners:
         del data_by_scanner[scanner]
