@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.2 (2024-11-18)
+
+### Fix
+
+* Discard impossible timestamps when restoring bluetooth scanner data ([#177](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/177)) ([`be11e23`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/be11e232d228c41b0966b2d21e40959d1bcaedd8))
+
 ## v0.20.1 (2024-10-31)
 
 ### Fix
