@@ -91,7 +91,7 @@ def get_adapters_from_hci() -> dict[int, dict[str, Any]]:
             dev = hci_dev_info()
             dev.dev_id = dev_req.dev_id
             ret = fcntl.ioctl(sock.fileno(), HCIGETDEVINFO, dev)
-            info = {str(k): getattr(dev, k) for k, v_ in dev._fields_}
+            info = {str(k): getattr(dev, k) for k, *v_ in dev._fields_}
             info["bdaddr"] = str(info["bdaddr"])
             info["name"] = info["name"].decode()
             out[int(dev.dev_id)] = info
