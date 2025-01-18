@@ -21,6 +21,7 @@ if system() != "Windows":
     )
 
 from .history import AdvertisementHistory, load_history_from_managed_objects
+from .mac_lookup import get_manufacturer_from_mac
 from .models import (
     ADAPTER_ADDRESS,
     ADAPTER_CONNECTION_SLOTS,
@@ -46,6 +47,7 @@ from .systems.linux_hci import get_adapters_from_hci
 from .util import adapter_human_name, adapter_model, adapter_unique_name
 
 __all__ = [
+    "get_manufacturer_from_mac",
     "AdvertisementHistory",
     "BluetoothAdapters",
     "BlueZDBusObjects",
