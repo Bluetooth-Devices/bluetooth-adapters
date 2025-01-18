@@ -1531,6 +1531,7 @@ def test_adapter_human_name():
     assert adapter_human_name("hci0", "aa:bb:cc:dd:ee:ff") == "hci0 (aa:bb:cc:dd:ee:ff)"
 
 
+@pytest.mark.asyncio
 async def test_get_manufacturer_from_mac():
     """Test get_manufacturer_from_mac."""
     assert await get_manufacturer_from_mac("00:00:00:00:00:00") is None
