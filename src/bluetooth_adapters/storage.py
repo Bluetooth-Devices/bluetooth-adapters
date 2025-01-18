@@ -83,7 +83,7 @@ class DiscoveredDeviceDict(TypedDict):
 
 
 def expire_stale_scanner_discovered_device_advertisement_data(
-    data_by_scanner: dict[str, DiscoveredDeviceAdvertisementDataDict]
+    data_by_scanner: dict[str, DiscoveredDeviceAdvertisementDataDict],
 ) -> None:
     """Expire stale discovered device advertisement data."""
     now = time.time()
@@ -163,7 +163,7 @@ def discovered_device_advertisement_data_to_dict(
 def _serialize_discovered_device_advertisement_datas(
     discovered_device_advertisement_datas: dict[
         str, tuple[BLEDevice, AdvertisementData]
-    ]
+    ],
 ) -> dict[str, DiscoveredDeviceDict]:
     """Serialize discovered_device_advertisement_datas."""
     return {
@@ -179,7 +179,7 @@ def _serialize_discovered_device_advertisement_datas(
 
 
 def _deserialize_discovered_device_advertisement_datas(
-    discovered_device_advertisement_datas: dict[str, DiscoveredDeviceDict]
+    discovered_device_advertisement_datas: dict[str, DiscoveredDeviceDict],
 ) -> dict[str, tuple[BLEDevice, AdvertisementData]]:
     """Deserialize discovered_device_advertisement_datas."""
     return {
@@ -258,7 +258,7 @@ def _get_monotonic_time_diff() -> float:
 
 
 def _deserialize_discovered_device_timestamps(
-    discovered_device_timestamps: dict[str, float]
+    discovered_device_timestamps: dict[str, float],
 ) -> dict[str, float]:
     """Deserialize discovered_device_timestamps."""
     time_diff = _get_monotonic_time_diff()
@@ -269,7 +269,7 @@ def _deserialize_discovered_device_timestamps(
 
 
 def _serialize_discovered_device_timestamps(
-    discovered_device_timestamps: dict[str, float]
+    discovered_device_timestamps: dict[str, float],
 ) -> dict[str, float]:
     """Serialize discovered_device_timestamps."""
     time_diff = _get_monotonic_time_diff()
