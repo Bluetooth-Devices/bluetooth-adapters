@@ -114,8 +114,9 @@ async def test_get_bluetooth_adapters_connect_refused_docker():
         async def call(self):
             return None
 
-    with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus), patch(
-        "bluetooth_adapters.dbus.is_docker_env", return_value=True
+    with (
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch("bluetooth_adapters.dbus.is_docker_env", return_value=True),
     ):
         assert await get_bluetooth_adapters() == []
 
@@ -156,8 +157,9 @@ async def test_get_bluetooth_adapters_connect_fails_docker():
         async def call(self):
             return None
 
-    with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus), patch(
-        "bluetooth_adapters.dbus.is_docker_env", return_value=True
+    with (
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch("bluetooth_adapters.dbus.is_docker_env", return_value=True),
     ):
         assert await get_bluetooth_adapters() == []
 
@@ -198,8 +200,9 @@ async def test_get_bluetooth_adapters_connect_broken_pipe_docker():
         async def call(self):
             return None
 
-    with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus), patch(
-        "bluetooth_adapters.dbus.is_docker_env", return_value=True
+    with (
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch("bluetooth_adapters.dbus.is_docker_env", return_value=True),
     ):
         assert await get_bluetooth_adapters() == []
 
@@ -265,8 +268,9 @@ async def test_get_bluetooth_adapters_times_out():
                 call=AsyncMock(side_effect=_stall),
             )
 
-    with patch.object(bluetooth_adapters_dbus, "REPLY_TIMEOUT", 0), patch(
-        "bluetooth_adapters.dbus.MessageBus", MockMessageBus
+    with (
+        patch.object(bluetooth_adapters_dbus, "REPLY_TIMEOUT", 0),
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
     ):
         assert await get_bluetooth_adapters() == []
 
@@ -696,10 +700,12 @@ async def test_get_adapters_linux():
         def setup(self, *args, **kwargs):
             pass
 
-    with patch("platform.system", return_value="Linux"), patch(
-        "bluetooth_adapters.dbus.MessageBus", MockMessageBus
-    ), patch(
-        "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
+        ),
     ):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
@@ -974,10 +980,12 @@ async def test_get_adapters_linux_device_listed_before_adapter():
         def setup(self, *args, **kwargs):
             pass
 
-    with patch("platform.system", return_value="Linux"), patch(
-        "bluetooth_adapters.dbus.MessageBus", MockMessageBus
-    ), patch(
-        "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
+        ),
     ):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
@@ -1257,12 +1265,17 @@ async def test_get_adapters_linux_uart():
         def setup(self, *args, **kwargs):
             raise NotAUSBDeviceError
 
-    with patch("platform.system", return_value="Linux"), patch(
-        "bluetooth_adapters.dbus.MessageBus", MockMessageBus
-    ), patch(
-        "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSBBluetoothDevice
-    ), patch(
-        "bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUARTBluetoothDevice
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.USBBluetoothDevice",
+            MockUSBBluetoothDevice,
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.UARTBluetoothDevice",
+            MockUARTBluetoothDevice,
+        ),
     ):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
@@ -1450,10 +1463,13 @@ async def test_get_adapters_linux_no_usb_device():
         def setup(self, *args, **kwargs):
             pass
 
-    with patch("platform.system", return_value="Linux"), patch(
-        "bluetooth_adapters.dbus.MessageBus", MockMessageBus
-    ), patch(
-        "bluetooth_adapters.systems.linux.USBBluetoothDevice", NoMfrMockBluetoothDevice
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.USBBluetoothDevice",
+            NoMfrMockBluetoothDevice,
+        ),
     ):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
@@ -1481,8 +1497,9 @@ async def test_get_adapters_linux_no_usb_device():
 async def test_get_adapters_macos():
     """Test get_adapters macos."""
 
-    with patch("platform.system", return_value="Darwin"), patch(
-        "platform.release", return_value="18.7.0"
+    with (
+        patch("platform.system", return_value="Darwin"),
+        patch("platform.release", return_value="18.7.0"),
     ):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
@@ -1505,8 +1522,9 @@ async def test_get_adapters_macos():
 async def test_get_adapters_windows():
     """Test get_adapters windows."""
 
-    with patch("platform.system", return_value="Windows"), patch(
-        "platform.release", return_value="18.7.0"
+    with (
+        patch("platform.system", return_value="Windows"),
+        patch("platform.release", return_value="18.7.0"),
     ):
         bluetooth_adapters = get_adapters()
         await bluetooth_adapters.refresh()
@@ -1608,7 +1626,7 @@ def test_discovered_device_advertisement_data_to_dict():
         "discovered_device_advertisement_datas": {
             "AA:BB:CC:DD:EE:FF": {
                 "advertisement_data": {
-                    "local_name": "Test " "Device",
+                    "local_name": "Test Device",
                     "manufacturer_data": {"76": "0215aabbccddeeff"},
                     "rssi": -50,
                     "service_data": {
@@ -1621,7 +1639,7 @@ def test_discovered_device_advertisement_data_to_dict():
                 "device": {
                     "address": "AA:BB:CC:DD:EE:FF",
                     "details": {"details": "test"},
-                    "name": "Test " "Device",
+                    "name": "Test Device",
                     "rssi": -50,
                 },
             }
@@ -1639,7 +1657,7 @@ def test_discovered_device_advertisement_data_from_dict():
             "discovered_device_advertisement_datas": {
                 "AA:BB:CC:DD:EE:FF": {
                     "advertisement_data": {
-                        "local_name": "Test " "Device",
+                        "local_name": "Test Device",
                         "manufacturer_data": {"76": "0215aabbccddeeff"},
                         "rssi": -50,
                         "service_data": {
@@ -1652,7 +1670,7 @@ def test_discovered_device_advertisement_data_from_dict():
                     "device": {
                         "address": "AA:BB:CC:DD:EE:FF",
                         "details": {"details": "test"},
-                        "name": "Test " "Device",
+                        "name": "Test Device",
                         "rssi": -50,
                     },
                 }
@@ -1671,7 +1689,7 @@ def test_discovered_device_advertisement_data_from_dict():
 
     expected_advertisement_data = AdvertisementData(
         local_name="Test Device",
-        manufacturer_data={0x004C: b"\x02\x15\xAA\xBB\xCC\xDD\xEE\xFF"},
+        manufacturer_data={0x004C: b"\x02\x15\xaa\xbb\xcc\xdd\xee\xff"},
         tx_power=50,
         service_data={"0000180d-0000-1000-8000-00805f9b34fb": b"\x00\x00\x00\x00"},
         service_uuids=["0000180d-0000-1000-8000-00805f9b34fb"],
@@ -1719,7 +1737,7 @@ def test_expire_stale_scanner_discovered_device_advertisement_data():
                 "discovered_device_advertisement_datas": {
                     "AA:BB:CC:DD:EE:FF": {
                         "advertisement_data": {
-                            "local_name": "Test " "Device",
+                            "local_name": "Test Device",
                             "manufacturer_data": {"76": "0215aabbccddeeff"},
                             "rssi": -50,
                             "service_data": {
@@ -1732,13 +1750,13 @@ def test_expire_stale_scanner_discovered_device_advertisement_data():
                         "device": {
                             "address": "AA:BB:CC:DD:EE:FF",
                             "details": {"details": "test"},
-                            "name": "Test " "Device",
+                            "name": "Test Device",
                             "rssi": -50,
                         },
                     },
                     "CC:DD:EE:FF:AA:BB": {
                         "advertisement_data": {
-                            "local_name": "Test " "Device Expired",
+                            "local_name": "Test Device Expired",
                             "manufacturer_data": {"76": "0215aabbccddeeff"},
                             "rssi": -50,
                             "service_data": {
@@ -1751,7 +1769,7 @@ def test_expire_stale_scanner_discovered_device_advertisement_data():
                         "device": {
                             "address": "CC:DD:EE:FF:AA:BB",
                             "details": {"details": "test"},
-                            "name": "Test " "Device Expired",
+                            "name": "Test Device Expired",
                             "rssi": -50,
                         },
                     },
@@ -1769,7 +1787,7 @@ def test_expire_stale_scanner_discovered_device_advertisement_data():
                 "discovered_device_advertisement_datas": {
                     "CC:DD:EE:FF:AA:BB": {
                         "advertisement_data": {
-                            "local_name": "Test " "Device Expired",
+                            "local_name": "Test Device Expired",
                             "manufacturer_data": {"76": "0215aabbccddeeff"},
                             "rssi": -50,
                             "service_data": {
@@ -1782,7 +1800,7 @@ def test_expire_stale_scanner_discovered_device_advertisement_data():
                         "device": {
                             "address": "CC:DD:EE:FF:AA:BB",
                             "details": {"details": "test"},
-                            "name": "Test " "Device Expired",
+                            "name": "Test Device Expired",
                             "rssi": -50,
                         },
                     }
@@ -1817,7 +1835,7 @@ def test_expire_future_discovered_device_advertisement_data(
                 "discovered_device_advertisement_datas": {
                     "AA:BB:CC:DD:EE:FF": {
                         "advertisement_data": {
-                            "local_name": "Test " "Device",
+                            "local_name": "Test Device",
                             "manufacturer_data": {"76": "0215aabbccddeeff"},
                             "rssi": -50,
                             "service_data": {
@@ -1830,13 +1848,13 @@ def test_expire_future_discovered_device_advertisement_data(
                         "device": {
                             "address": "AA:BB:CC:DD:EE:FF",
                             "details": {"details": "test"},
-                            "name": "Test " "Device",
+                            "name": "Test Device",
                             "rssi": -50,
                         },
                     },
                     "CC:DD:EE:FF:AA:BB": {
                         "advertisement_data": {
-                            "local_name": "Test " "Device Expired",
+                            "local_name": "Test Device Expired",
                             "manufacturer_data": {"76": "0215aabbccddeeff"},
                             "rssi": -50,
                             "service_data": {
@@ -1849,7 +1867,7 @@ def test_expire_future_discovered_device_advertisement_data(
                         "device": {
                             "address": "CC:DD:EE:FF:AA:BB",
                             "details": {"details": "test"},
-                            "name": "Test " "Device Expired",
+                            "name": "Test Device Expired",
                             "rssi": -50,
                         },
                     },
@@ -1867,7 +1885,7 @@ def test_expire_future_discovered_device_advertisement_data(
                 "discovered_device_advertisement_datas": {
                     "CC:DD:EE:FF:AA:BB": {
                         "advertisement_data": {
-                            "local_name": "Test " "Device Expired",
+                            "local_name": "Test Device Expired",
                             "manufacturer_data": {"76": "0215aabbccddeeff"},
                             "rssi": -50,
                             "service_data": {
@@ -1880,7 +1898,7 @@ def test_expire_future_discovered_device_advertisement_data(
                         "device": {
                             "address": "CC:DD:EE:FF:AA:BB",
                             "details": {"details": "test"},
-                            "name": "Test " "Device Expired",
+                            "name": "Test Device Expired",
                             "rssi": -50,
                         },
                     }
@@ -1911,7 +1929,7 @@ def test_discovered_device_advertisement_data_from_dict_corrupt(caplog):
             "discovered_device_advertisement_datas": {
                 "AA:BB:CC:DD:EE:FF": {
                     "advertisement_data": {  # type: ignore[typeddict-item]
-                        "local_name": "Test " "Device",
+                        "local_name": "Test Device",
                         "manufacturer_data": {"76": "0215aabbccddeeff"},
                         "rssi": -50,
                         "service_data": {
