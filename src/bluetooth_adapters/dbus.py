@@ -66,7 +66,7 @@ class BlueZDBusObjects:
 
 
 def _adapters_from_managed_objects(
-    managed_objects: dict[str, Any]
+    managed_objects: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
     adapters: dict[str, dict[str, Any]] = {}
     for path, unpacked_data in managed_objects.items():
@@ -121,7 +121,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
                 ex,
             )
         _LOGGER.debug(
-            "DBus service not found; make sure the DBus socket " "is available: %s",
+            "DBus service not found; make sure the DBus socket is available: %s",
             ex,
         )
         return {}
@@ -133,7 +133,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
                 ex,
             )
         _LOGGER.debug(
-            "DBus connection broken: %s; try restarting " "`bluetooth` and `dbus`", ex
+            "DBus connection broken: %s; try restarting `bluetooth` and `dbus`", ex
         )
         return {}
     except ConnectionRefusedError as ex:
@@ -144,7 +144,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
                 ex,
             )
         _LOGGER.debug(
-            "DBus connection refused: %s; try restarting " "`bluetooth` and `dbus`", ex
+            "DBus connection refused: %s; try restarting `bluetooth` and `dbus`", ex
         )
         return {}
     msg = Message(
