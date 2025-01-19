@@ -20,6 +20,7 @@ from usb_devices import BluetoothDevice as USBBluetoothDevice
 from usb_devices import NotAUSBDeviceError, USBDevice
 
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
+from bluetooth_adapters import get_manufacturer_from_mac
 
 if system() != "Windows":
     from bluetooth_adapters import (
@@ -1546,6 +1547,13 @@ def test_adapter_human_name():
     """Test adapter human name."""
     assert adapter_human_name("hci0", DEFAULT_ADDRESS) == "hci0"
     assert adapter_human_name("hci0", "aa:bb:cc:dd:ee:ff") == "hci0 (aa:bb:cc:dd:ee:ff)"
+
+
+@pytest.mark.asyncio
+async def test_get_manufacturer_from_mac():
+    """Test get_manufacturer_from_mac."""
+    assert await get_manufacturer_from_mac("00:00:00:00:00:00") is None
+    assert await get_manufacturer_from_mac("00:1A:7D:DA:71:04") == "cyber-blue(HK)Ltd"
 
 
 def test_adapter_unique_name():
