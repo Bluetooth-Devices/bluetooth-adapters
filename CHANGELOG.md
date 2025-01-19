@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.0 (2025-01-19)
+
+### Feature
+
+* Add get_manufacturer_from_mac ([#190](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/190)) ([`e3c9d6a`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/e3c9d6abf3f05be6d830a26c4bcd926b23cd4980))
+
 ## v0.20.2 (2024-11-18)
 
 ### Fix
