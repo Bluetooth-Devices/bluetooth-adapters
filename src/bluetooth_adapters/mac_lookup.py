@@ -1,5 +1,7 @@
 """Get manufacturer from mac address."""
 
+from __future__ import annotations
+
 import aiooui
 
 from .const import EMPTY_MAC_ADDRESS
