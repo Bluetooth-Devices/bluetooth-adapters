@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.1 (2025-01-22)
+
+### Fix
+
+* Add missing platform markers for dbus-fast ([#193](https://github.com/Bluetooth-Devices/bluetooth-adapters/issues/193)) ([`7cc9b16`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/7cc9b16fff48388e3b4543bf552f50ff14e697a8))
+
 ## v0.21.0 (2025-01-19)
 
 ### Feature
