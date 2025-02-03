@@ -1,26 +1,30 @@
-[tool.poetry]
+[project]
 name = "bluetooth-adapters"
 version = "0.21.1"
+license = "Apache-2.0"
 description = "Tools to enumerate and find Bluetooth Adapters"
-authors = ["J. Nick Koston <nick@koston.org>"]
+authors = [{ name = "J. Nick Koston", email = "nick@koston.org" }]
 readme = "README.md"
-repository = "https://github.com/bluetooth-devices/bluetooth-adapters"
-documentation = "https://bluetooth-adapters.readthedocs.io"
+requires-python = ">=3.9"
+dynamic = ["classifiers", "dependencies", "optional-dependencies"]
+
+[project.urls]
+"Documentation" = "https://bluetooth-adapters.readthedocs.io"
+"Repository" = "https://github.com/bluetooth-devices/bluetooth-adapters"
+"Bug Tracker" = "https://github.com/bluetooth-devices/bluetooth-adapters/issues"
+"Changelog" = "https://github.com/bluetooth-devices/bluetooth-adapters/blob/main/CHANGELOG.md"
+
+[tool.poetry]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries",
-    "License :: OSI Approved :: Apache Software License",
 ]
 packages = [
     { include = "bluetooth_adapters", from = "src" },
 ]
-
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/bluetooth-devices/bluetooth-adapters/issues"
-"Changelog" = "https://github.com/bluetooth-devices/bluetooth-adapters/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.14"
@@ -43,7 +47,7 @@ docs = [
     "sphinx-rtd-theme",
 ]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^8.3"
 pytest-cov = "^6.0"
 pytest-asyncio = "^0.25.3"
