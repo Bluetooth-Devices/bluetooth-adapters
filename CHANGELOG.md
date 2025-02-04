@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.21.4 (2025-02-04)
+
+### Bug Fixes
+
+- Pypi upload ([#202](https://github.com/Bluetooth-Devices/bluetooth-adapters/pull/202),
+  [`5b90015`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/5b9001596e08f91401695a089573d9147603a8e0))
+
+
 ## v0.21.3 (2025-02-04)
 
 ### Bug Fixes

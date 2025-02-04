@@ -1,6 +1,6 @@
 [project]
 name = "bluetooth-adapters"
-version = "0.21.3"
+version = "0.21.4"
 license = "Apache-2.0"
 description = "Tools to enumerate and find Bluetooth Adapters"
 authors = [{ name = "J. Nick Koston", email = "nick@koston.org" }]
