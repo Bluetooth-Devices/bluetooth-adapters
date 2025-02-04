@@ -54,7 +54,7 @@ pytest-asyncio = "^0.25.3"
 
 [tool.semantic_release]
 branch = "main"
-version_toml = ["pyproject.toml:tool.poetry.version"]
+version_toml = ["pyproject.toml:project.version"]
 version_variables = ["src/bluetooth_adapters/__init__.py:__version__"]
 build_command = "pip install poetry && poetry build"
 
@@ -106,5 +106,5 @@ module = "docs.*"
 ignore_errors = true
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
