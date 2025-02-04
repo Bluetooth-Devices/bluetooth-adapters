@@ -54,7 +54,7 @@ pytest-asyncio = "^0.25.3"
 
 [tool.semantic_release]
 branch = "main"
-version_toml = ["pyproject.toml:tool.poetry.version"]
+version_toml = ["pyproject.toml:project.version"]
 version_variables = ["src/bluetooth_adapters/__init__.py:__version__"]
 build_command = "pip install poetry && poetry build"
 
