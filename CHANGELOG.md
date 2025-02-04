@@ -1,6 +1,27 @@
 # CHANGELOG
 
 
+## v0.21.3 (2025-02-04)
+
+### Bug Fixes
+
+- Semantic_release version update + update poetry-core version for build-system to >=2.0
+  ([#201](https://github.com/Bluetooth-Devices/bluetooth-adapters/pull/201),
+  [`97467d3`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/97467d3578fb5bdde784e0050978781301742579))
+
+* fix: semantic_release version update
+
+* fix: update poetry-core version for build-system to >=2.0
+
+### Chores
+
+- **pre-commit.ci**: Pre-commit autoupdate
+  ([#200](https://github.com/Bluetooth-Devices/bluetooth-adapters/pull/200),
+  [`d773fc4`](https://github.com/Bluetooth-Devices/bluetooth-adapters/commit/d773fc4046a9704dcdf071efd19c17324e943130))
+
+Co-authored-by: pre-commit-ci[bot] <66853113+pre-commit-ci[bot]@users.noreply.github.com>
+
+
 ## v0.21.2 (2025-02-03)
 
 ### Bug Fixes
