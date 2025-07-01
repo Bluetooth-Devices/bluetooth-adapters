@@ -1171,14 +1171,14 @@ markers = {main = "python_version < \"3.12\"", dev = "python_version < \"3.10\""
 
 [[package]]
 name = "uart-devices"
-version = "0.1.0"
+version = "0.1.1"
 description = "UART Devices for Linux"
 optional = false
-python-versions = "<4.0,>=3.8"
+python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "uart_devices-0.1.0-py3-none-any.whl", hash = "sha256:f019357945a4f2d619e43a7cef7cee4f52aeff06aa5c674f9da448dce3c9cd64"},
-    {file = "uart_devices-0.1.0.tar.gz", hash = "sha256:7f0342c0ba0bc2a4c13c9ead5462dc9feeaca507e5c7017ebd074a69567ad9b1"},
+    {file = "uart_devices-0.1.1-py3-none-any.whl", hash = "sha256:55bc8cce66465e90b298f0910e5c496bc7be021341c5455954cf61c6253dc123"},
+    {file = "uart_devices-0.1.1.tar.gz", hash = "sha256:3a52c4ae0f5f7400ebe1ae5f6e2a2d40cc0b7f18a50e895236535c4e53c6ed34"},
 ]
 
 [[package]]
