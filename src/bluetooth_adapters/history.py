@@ -51,9 +51,6 @@ def load_history_from_managed_objects(
             address,
             props["Alias"],
             {"path": path, "props": props},
-            rssi,
-            uuids=uuids,
-            manufacturer_data=manufacturer_data,
         )
         advertisement_data = AdvertisementData(
             local_name=props.get("Name"),

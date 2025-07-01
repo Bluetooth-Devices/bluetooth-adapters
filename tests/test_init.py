@@ -14,13 +14,12 @@ except (AttributeError, ImportError):
     MessageType = None
     AuthError = None
     # dbus_fast is not available on Windows
+import bluetooth_adapters.dbus as bluetooth_adapters_dbus
+from bluetooth_adapters import get_manufacturer_from_mac
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
 from uart_devices import UARTDevice
 from usb_devices import BluetoothDevice as USBBluetoothDevice
 from usb_devices import NotAUSBDeviceError, USBDevice
-
-import bluetooth_adapters.dbus as bluetooth_adapters_dbus
-from bluetooth_adapters import get_manufacturer_from_mac
 
 if system() != "Windows":
     from bluetooth_adapters import (
@@ -463,7 +462,7 @@ async def test_BlueZDBusObjects():
         assert bluez.history == {
             "54:D2:72:AB:35:95": AdvertisementHistory(ANY, ANY, "hci0")
         }
-        assert bluez.history["54:D2:72:AB:35:95"].device.rssi == -78
+        assert bluez.history["54:D2:72:AB:35:95"].advertisement_data.rssi == -78
         assert (
             len(
                 load_history_from_managed_objects(
@@ -759,8 +758,10 @@ async def test_get_adapters_linux():
     reason="dbus_fast is not available",
 )
 async def test_get_adapters_linux_device_listed_before_adapter():
-    """Test get_adapters. List a device entry before the adapter entry to ensure
-    the adapter is retrieved and not the device."""
+    """
+    Test get_adapters. List a device entry before the adapter entry to ensure
+    the adapter is retrieved and not the device.
+    """
 
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
@@ -1496,7 +1497,6 @@ async def test_get_adapters_linux_no_usb_device():
 @pytest.mark.asyncio
 async def test_get_adapters_macos():
     """Test get_adapters macos."""
-
     with (
         patch("platform.system", return_value="Darwin"),
         patch("platform.release", return_value="18.7.0"),
@@ -1521,7 +1521,6 @@ async def test_get_adapters_macos():
 @pytest.mark.asyncio
 async def test_get_adapters_windows():
     """Test get_adapters windows."""
-
     with (
         patch("platform.system", return_value="Windows"),
         patch("platform.release", return_value="18.7.0"),
@@ -1603,7 +1602,6 @@ def test_discovered_device_advertisement_data_to_dict():
                         address="AA:BB:CC:DD:EE:FF",
                         name="Test Device",
                         details={"details": "test"},
-                        rssi=-50,
                     ),
                     AdvertisementData(
                         local_name="Test Device",
@@ -1684,7 +1682,6 @@ def test_discovered_device_advertisement_data_from_dict():
         address="AA:BB:CC:DD:EE:FF",
         name="Test Device",
         details={"details": "test"},
-        rssi=-50,
     )
 
     expected_advertisement_data = AdvertisementData(
@@ -1706,8 +1703,6 @@ def test_discovered_device_advertisement_data_from_dict():
     assert out_ble_device.address == expected_ble_device.address
     assert out_ble_device.name == expected_ble_device.name
     assert out_ble_device.details == expected_ble_device.details
-    assert out_ble_device.rssi == expected_ble_device.rssi
-    assert out_ble_device.metadata == expected_ble_device.metadata
     assert out_advertisement_data == expected_advertisement_data
 
     assert result == DiscoveredDeviceAdvertisementData(

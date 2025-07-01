@@ -184,7 +184,11 @@ def _deserialize_discovered_device_advertisement_datas(
     """Deserialize discovered_device_advertisement_datas."""
     return {
         address: (
-            BLEDevice(**device_advertisement_data["device"]),
+            BLEDevice(
+                address=device_advertisement_data["device"]["address"],
+                name=device_advertisement_data["device"].get("name"),
+                details=device_advertisement_data["device"].get("details", {}),
+            ),
             _advertisement_data_from_dict(
                 device_advertisement_data["advertisement_data"]
             ),
