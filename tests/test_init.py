@@ -462,7 +462,7 @@ async def test_BlueZDBusObjects():
         assert bluez.history == {
             "54:D2:72:AB:35:95": AdvertisementHistory(ANY, ANY, "hci0")
         }
-        assert bluez.history["54:D2:72:AB:35:95"].device.rssi == -78
+        assert bluez.history["54:D2:72:AB:35:95"].advertisement_data.rssi == -78
         assert (
             len(
                 load_history_from_managed_objects(
