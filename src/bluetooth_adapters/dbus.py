@@ -104,8 +104,30 @@ async def get_dbus_managed_objects() -> dict[str, Any]:
 
 
 async def _get_dbus_managed_objects() -> dict[str, Any]:
+    bus = None
     try:
-        bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
+        bus = MessageBus(bus_type=BusType.SYSTEM)
+        await bus.connect()
+
+        msg = Message(
+            destination="org.bluez",
+            path="/",
+            interface="org.freedesktop.DBus.ObjectManager",
+            member="GetManagedObjects",
+        )
+        try:
+            async with asyncio_timeout(REPLY_TIMEOUT):
+                reply = await bus.call(msg)
+        except EOFError as ex:
+            _LOGGER.debug("DBus connection closed: %s", ex)
+            return {}
+        except asyncio.TimeoutError:
+            _LOGGER.debug(
+                "Dbus timeout waiting for reply to GetManagedObjects; try restarting "
+                "`bluetooth` and `dbus`"
+            )
+            return {}
+
     except AuthError as ex:
         _LOGGER.warning(
             "DBus authentication error; make sure the DBus socket "
@@ -147,25 +169,10 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
             "DBus connection refused: %s; try restarting `bluetooth` and `dbus`", ex
         )
         return {}
-    msg = Message(
-        destination="org.bluez",
-        path="/",
-        interface="org.freedesktop.DBus.ObjectManager",
-        member="GetManagedObjects",
-    )
-    try:
-        async with asyncio_timeout(REPLY_TIMEOUT):
-            reply = await bus.call(msg)
-    except EOFError as ex:
-        _LOGGER.debug("DBus connection closed: %s", ex)
-        return {}
-    except asyncio.TimeoutError:
-        _LOGGER.debug(
-            "Dbus timeout waiting for reply to GetManagedObjects; try restarting "
-            "`bluetooth` and `dbus`"
-        )
-        return {}
-    bus.disconnect()
+    finally:
+        if bus:
+            bus.disconnect()
+
     if not reply or reply.message_type != MessageType.METHOD_RETURN:
         _LOGGER.debug(
             "Received an unexpected reply from Dbus while "
