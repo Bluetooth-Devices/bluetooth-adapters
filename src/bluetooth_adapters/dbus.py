@@ -109,7 +109,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
     with ExitStack() as stack:
         try:
             bus = MessageBus(bus_type=BusType.SYSTEM)
-            stack.push(bus.disconnect)
+            stack.callback(bus.disconnect)
             await bus.connect()
         except AuthError as ex:
             _LOGGER.warning(
