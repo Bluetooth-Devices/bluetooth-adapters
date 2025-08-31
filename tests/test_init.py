@@ -325,6 +325,9 @@ async def test_get_bluetooth_adapters_no_wrong_return():
                 ),
             )
 
+        def disconnect(self):
+            pass
+
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == []
 
@@ -357,6 +360,9 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
                 ),
             )
 
+        def disconnect(self):
+            pass
+
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == ["hci0", "hci1"]
 
@@ -388,6 +394,9 @@ async def test_get_dbus_managed_objects():
                     )
                 ),
             )
+
+        def disconnect(self):
+            pass
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         assert await get_dbus_managed_objects() == {
@@ -477,6 +486,9 @@ async def test_BlueZDBusObjects():
                     )
                 ),
             )
+
+        def disconnect(self):
+            pass
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         bluez = BlueZDBusObjects()
@@ -706,6 +718,9 @@ async def test_get_adapters_linux():
                     )
                 ),
             )
+
+        def disconnect(self):
+            pass
 
     class MockUSBDevice(USBDevice):
         def __init__(self, *args, **kwargs):
@@ -988,6 +1003,9 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                     )
                 ),
             )
+
+        def disconnect(self):
+            pass
 
     class MockUSBDevice(USBDevice):
         def __init__(self, *args, **kwargs):
