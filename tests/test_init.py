@@ -755,6 +755,7 @@ async def test_get_adapters_linux():
                 "product_id": "0001",
                 "sw_version": "homeassistant",
                 "vendor_id": "0a12",
+                "adapter_type": "usb",
             },
             "hci2": {
                 "address": "00:00:00:00:00:00",
@@ -765,6 +766,7 @@ async def test_get_adapters_linux():
                 "product_id": "0001",
                 "sw_version": "homeassistant",
                 "vendor_id": "0a12",
+                "adapter_type": "usb",
             },
             "hci3": {
                 "address": "00:1A:7D:DA:71:05",
@@ -775,6 +777,7 @@ async def test_get_adapters_linux():
                 "product_id": "0001",
                 "sw_version": "homeassistant",
                 "vendor_id": "0a12",
+                "adapter_type": "usb",
             },
         }
 
@@ -1038,6 +1041,7 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "product_id": "0001",
                 "sw_version": "homeassistant",
                 "vendor_id": "0a12",
+                "adapter_type": "usb",
             },
             "hci2": {
                 "address": "00:00:00:00:00:00",
@@ -1048,6 +1052,7 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "product_id": "0001",
                 "sw_version": "homeassistant",
                 "vendor_id": "0a12",
+                "adapter_type": "usb",
             },
             "hci3": {
                 "address": "00:1A:7D:DA:71:05",
@@ -1058,6 +1063,7 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "product_id": "0001",
                 "sw_version": "homeassistant",
                 "vendor_id": "0a12",
+                "adapter_type": "usb",
             },
         }
 
@@ -1329,6 +1335,7 @@ async def test_get_adapters_linux_uart():
                 "product_id": None,
                 "sw_version": "homeassistant",
                 "vendor_id": None,
+                "adapter_type": "uart",
             },
             "hci2": {
                 "address": "00:00:00:00:00:00",
@@ -1339,6 +1346,7 @@ async def test_get_adapters_linux_uart():
                 "product_id": None,
                 "sw_version": "homeassistant",
                 "vendor_id": None,
+                "adapter_type": "uart",
             },
             "hci3": {
                 "address": "00:1A:7D:DA:71:05",
@@ -1349,6 +1357,7 @@ async def test_get_adapters_linux_uart():
                 "product_id": None,
                 "sw_version": "homeassistant",
                 "vendor_id": None,
+                "adapter_type": "uart",
             },
         }
 
@@ -1520,6 +1529,7 @@ async def test_get_adapters_linux_no_usb_device():
                 "hw_version": "usb:v1D6Bp0246d053F",
                 "passive_scan": False,
                 "sw_version": "homeassistant",
+                "adapter_type": "usb",
             },
         }
 
@@ -1544,6 +1554,7 @@ async def test_get_adapters_macos():
                 "product": "Unknown MacOS Model",
                 "vendor_id": "Unknown",
                 "product_id": "Unknown",
+                "adapter_type": None,
             }
         }
 
@@ -1568,6 +1579,7 @@ async def test_get_adapters_windows():
                 "product": "Unknown Windows Model",
                 "vendor_id": "Unknown",
                 "product_id": "Unknown",
+                "adapter_type": None,
             }
         }
 

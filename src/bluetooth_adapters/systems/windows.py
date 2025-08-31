@@ -22,6 +22,7 @@ class WindowsAdapters(BluetoothAdapters):
                 product="Unknown Windows Model",
                 vendor_id="Unknown",
                 product_id="Unknown",
+                adapter_type=None,  # Unknown for Windows
             )
         }
 

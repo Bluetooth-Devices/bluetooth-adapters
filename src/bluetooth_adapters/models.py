@@ -17,6 +17,7 @@ class AdapterDetails(TypedDict, total=False):
     product_id: str | None
     passive_scan: bool
     connection_slots: int | None
+    adapter_type: str | None  # "usb", "uart", or None
 
 
 ADAPTER_ADDRESS: Final = "address"
@@ -28,3 +29,4 @@ ADAPTER_PRODUCT: Final = "product"
 ADAPTER_VENDOR_ID: Final = "vendor_id"
 ADAPTER_PRODUCT_ID: Final = "product_id"
 ADAPTER_CONNECTION_SLOTS: Final = "connection_slots"
+ADAPTER_TYPE: Final = "adapter_type"
