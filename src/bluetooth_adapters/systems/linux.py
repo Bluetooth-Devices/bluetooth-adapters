@@ -4,11 +4,12 @@ import asyncio
 import logging
 from typing import Any
 
-import aiooui
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
 from uart_devices import NotAUARTDeviceError
 from usb_devices import BluetoothDevice as USBBluetoothDevice
 from usb_devices import NotAUSBDeviceError
+
+import aiooui
 
 from ..adapters import BluetoothAdapters
 from ..const import EMPTY_MAC_ADDRESS, UNIX_DEFAULT_BLUETOOTH_ADAPTER
@@ -91,6 +92,7 @@ class LinuxAdapters(BluetoothAdapters):
                         product=None,
                         vendor_id=None,
                         product_id=None,
+                        adapter_type=None,  # Unknown for hci-only adapters
                     )
             adapter_details = self._bluez.adapter_details
             for adapter, details in adapter_details.items():
@@ -102,7 +104,9 @@ class LinuxAdapters(BluetoothAdapters):
                 manufacturer = None
                 vendor_id: str | None = None
                 product_id: str | None = None
+                adapter_type: str | None = None
                 if isinstance(device, USBBluetoothDevice):
+                    adapter_type = "usb"
                     usb_device = device.usb_device
                     if mac_address != EMPTY_MAC_ADDRESS and (
                         usb_device is None
@@ -118,6 +122,7 @@ class LinuxAdapters(BluetoothAdapters):
                         vendor_id = usb_device.vendor_id
                         product_id = usb_device.product_id
                 elif isinstance(device, UARTBluetoothDevice):
+                    adapter_type = "uart"
                     uart_device = device.uart_device
                     if uart_device is None:
                         if mac_address != EMPTY_MAC_ADDRESS:
@@ -142,6 +147,7 @@ class LinuxAdapters(BluetoothAdapters):
                     product=product,
                     vendor_id=vendor_id,
                     product_id=product_id,
+                    adapter_type=adapter_type,
                 )
             self._adapters = adapters
         return self._adapters

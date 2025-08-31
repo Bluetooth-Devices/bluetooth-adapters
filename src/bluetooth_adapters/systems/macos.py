@@ -20,6 +20,7 @@ class MacOSAdapters(BluetoothAdapters):
                 product="Unknown MacOS Model",
                 vendor_id="Unknown",
                 product_id="Unknown",
+                adapter_type=None,  # Unknown for macOS
             )
         }
 
