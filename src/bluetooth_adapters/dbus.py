@@ -5,6 +5,7 @@ from contextlib import ExitStack
 from functools import cache
 from pathlib import Path
 from typing import Any
+import asyncio
 
 try:
     from dbus_fast import AuthError, BusType, Message, MessageType, unpack_variants
@@ -163,7 +164,7 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         except EOFError as ex:
             _LOGGER.debug("DBus connection closed: %s", ex)
             return {}
-        except TimeoutError:
+        except asyncio.TimeoutError:
             _LOGGER.debug(
                 "Dbus timeout waiting for reply to GetManagedObjects; try restarting "
                 "`bluetooth` and `dbus`"

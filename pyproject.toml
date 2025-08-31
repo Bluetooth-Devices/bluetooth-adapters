@@ -105,6 +105,9 @@ allow_untyped_defs = true
 module = "docs.*"
 ignore_errors = true
 
+[tool.ruff]
+target-version = "py39"
+
 [build-system]
 requires = ["poetry-core>=2.0.0"]
 build-backend = "poetry.core.masonry.api"
