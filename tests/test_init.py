@@ -110,6 +110,9 @@ async def test_get_bluetooth_adapters_connect_refused_docker():
         async def connect(self):
             raise ConnectionRefusedError
 
+        def disconnect(self):
+            pass
+
         async def call(self):
             return None
 
@@ -133,6 +136,9 @@ async def test_get_bluetooth_adapters_connect_fails():
         async def connect(self):
             raise FileNotFoundError
 
+        def disconnect(self):
+            pass
+
         async def call(self):
             return None
 
@@ -152,6 +158,9 @@ async def test_get_bluetooth_adapters_connect_fails_docker():
 
         async def connect(self):
             raise FileNotFoundError
+
+        def disconnect(self):
+            pass
 
         async def call(self):
             return None
@@ -176,6 +185,9 @@ async def test_get_bluetooth_adapters_connect_broken_pipe():
         async def connect(self):
             raise BrokenPipeError
 
+        def disconnect(self):
+            pass
+
         async def call(self):
             return None
 
@@ -195,6 +207,9 @@ async def test_get_bluetooth_adapters_connect_broken_pipe_docker():
 
         async def connect(self):
             raise BrokenPipeError
+
+        def disconnect(self):
+            pass
 
         async def call(self):
             return None
@@ -221,6 +236,9 @@ async def test_get_bluetooth_adapters_connect_eof_error():
                 disconnect=MagicMock(), call=AsyncMock(side_effect=EOFError)
             )
 
+        def disconnect(self):
+            pass
+
         async def call(self):
             raise EOFError
 
@@ -240,6 +258,9 @@ async def test_get_bluetooth_adapters_no_call_return():
 
         async def connect(self):
             return AsyncMock(disconnect=MagicMock(), call=AsyncMock())
+
+        def disconnect(self):
+            pass
 
         async def call(self):
             return None
@@ -266,6 +287,9 @@ async def test_get_bluetooth_adapters_times_out():
                 disconnect=MagicMock(),
                 call=AsyncMock(side_effect=_stall),
             )
+
+        def disconnect(self):
+            pass
 
     with (
         patch.object(bluetooth_adapters_dbus, "REPLY_TIMEOUT", 0),
