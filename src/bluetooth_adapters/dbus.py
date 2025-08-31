@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import asyncio
 import logging
+from contextlib import ExitStack
 from functools import cache
 from pathlib import Path
 from typing import Any
@@ -104,11 +104,53 @@ async def get_dbus_managed_objects() -> dict[str, Any]:
 
 
 async def _get_dbus_managed_objects() -> dict[str, Any]:
-    bus = None
-    try:
-        bus = MessageBus(bus_type=BusType.SYSTEM)
-        await bus.connect()
-
+    bus: MessageBus | None = None
+    with ExitStack() as stack:
+        try:
+            bus = MessageBus(bus_type=BusType.SYSTEM)
+            stack.push(bus.disconnect)
+            await bus.connect()
+        except AuthError as ex:
+            _LOGGER.warning(
+                "DBus authentication error; make sure the DBus socket "
+                "is available and the user has the correct permissions: %s",
+                ex,
+            )
+            return {}
+        except FileNotFoundError as ex:
+            if is_docker_env():
+                _LOGGER.debug(
+                    "DBus service not found; docker config may "
+                    "be missing `-v /run/dbus:/run/dbus:ro`: %s",
+                    ex,
+                )
+            _LOGGER.debug(
+                "DBus service not found; make sure the DBus socket is available: %s",
+                ex,
+            )
+            return {}
+        except BrokenPipeError as ex:
+            if is_docker_env():
+                _LOGGER.debug(
+                    "DBus connection broken: %s; try restarting "
+                    "`bluetooth`, `dbus`, and finally the docker container",
+                    ex,
+                )
+            _LOGGER.debug(
+                "DBus connection broken: %s; try restarting `bluetooth` and `dbus`", ex
+            )
+            return {}
+        except ConnectionRefusedError as ex:
+            if is_docker_env():
+                _LOGGER.debug(
+                    "DBus connection refused: %s; try restarting "
+                    "`bluetooth`, `dbus`, and finally the docker container",
+                    ex,
+                )
+            _LOGGER.debug(
+                "DBus connection refused: %s; try restarting `bluetooth` and `dbus`", ex
+            )
+            return {}
         msg = Message(
             destination="org.bluez",
             path="/",
@@ -121,67 +163,21 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
         except EOFError as ex:
             _LOGGER.debug("DBus connection closed: %s", ex)
             return {}
-        except asyncio.TimeoutError:
+        except TimeoutError:
             _LOGGER.debug(
                 "Dbus timeout waiting for reply to GetManagedObjects; try restarting "
                 "`bluetooth` and `dbus`"
             )
             return {}
-
-    except AuthError as ex:
-        _LOGGER.warning(
-            "DBus authentication error; make sure the DBus socket "
-            "is available and the user has the correct permissions: %s",
-            ex,
-        )
-        return {}
-    except FileNotFoundError as ex:
-        if is_docker_env():
+        if not reply or reply.message_type != MessageType.METHOD_RETURN:
             _LOGGER.debug(
-                "DBus service not found; docker config may "
-                "be missing `-v /run/dbus:/run/dbus:ro`: %s",
-                ex,
+                "Received an unexpected reply from Dbus while "
+                "calling GetManagedObjects on org.bluez: %s",
+                reply,
             )
-        _LOGGER.debug(
-            "DBus service not found; make sure the DBus socket is available: %s",
-            ex,
-        )
-        return {}
-    except BrokenPipeError as ex:
-        if is_docker_env():
-            _LOGGER.debug(
-                "DBus connection broken: %s; try restarting "
-                "`bluetooth`, `dbus`, and finally the docker container",
-                ex,
-            )
-        _LOGGER.debug(
-            "DBus connection broken: %s; try restarting `bluetooth` and `dbus`", ex
-        )
-        return {}
-    except ConnectionRefusedError as ex:
-        if is_docker_env():
-            _LOGGER.debug(
-                "DBus connection refused: %s; try restarting "
-                "`bluetooth`, `dbus`, and finally the docker container",
-                ex,
-            )
-        _LOGGER.debug(
-            "DBus connection refused: %s; try restarting `bluetooth` and `dbus`", ex
-        )
-        return {}
-    finally:
-        if bus:
-            bus.disconnect()
-
-    if not reply or reply.message_type != MessageType.METHOD_RETURN:
-        _LOGGER.debug(
-            "Received an unexpected reply from Dbus while "
-            "calling GetManagedObjects on org.bluez: %s",
-            reply,
-        )
-        return {}
-    results: dict[str, Any] = reply.body[0]
-    return results
+            return {}
+        results: dict[str, Any] = reply.body[0]
+        return results
 
 
 @cache
