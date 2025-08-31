@@ -113,7 +113,7 @@ async def test_get_bluetooth_adapters_connect_refused_docker():
         def disconnect(self):
             pass
 
-        async def call(self):
+        async def call(self, *args, **kwargs):
             return None
 
     with (
@@ -139,7 +139,7 @@ async def test_get_bluetooth_adapters_connect_fails():
         def disconnect(self):
             pass
 
-        async def call(self):
+        async def call(self, *args, **kwargs):
             return None
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
@@ -162,7 +162,7 @@ async def test_get_bluetooth_adapters_connect_fails_docker():
         def disconnect(self):
             pass
 
-        async def call(self):
+        async def call(self, *args, **kwargs):
             return None
 
     with (
@@ -188,7 +188,7 @@ async def test_get_bluetooth_adapters_connect_broken_pipe():
         def disconnect(self):
             pass
 
-        async def call(self):
+        async def call(self, *args, **kwargs):
             return None
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
@@ -211,7 +211,7 @@ async def test_get_bluetooth_adapters_connect_broken_pipe_docker():
         def disconnect(self):
             pass
 
-        async def call(self):
+        async def call(self, *args, **kwargs):
             return None
 
     with (
@@ -232,14 +232,12 @@ async def test_get_bluetooth_adapters_connect_eof_error():
             pass
 
         async def connect(self):
-            return AsyncMock(
-                disconnect=MagicMock(), call=AsyncMock(side_effect=EOFError)
-            )
+            pass
 
         def disconnect(self):
             pass
 
-        async def call(self):
+        async def call(self, *args, **kwargs):
             raise EOFError
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
@@ -257,12 +255,12 @@ async def test_get_bluetooth_adapters_no_call_return():
             pass
 
         async def connect(self):
-            return AsyncMock(disconnect=MagicMock(), call=AsyncMock())
+            pass
 
         def disconnect(self):
             pass
 
-        async def call(self):
+        async def call(self, *args, **kwargs):
             return None
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
@@ -283,10 +281,10 @@ async def test_get_bluetooth_adapters_times_out():
             pass
 
         async def connect(self):
-            return AsyncMock(
-                disconnect=MagicMock(),
-                call=AsyncMock(side_effect=_stall),
-            )
+            pass
+
+        async def call(self, *args, **kwargs):
+            await _stall(*args)
 
         def disconnect(self):
             pass
@@ -309,24 +307,22 @@ async def test_get_bluetooth_adapters_no_wrong_return():
             pass
 
         async def connect(self):
-            return AsyncMock(
-                disconnect=MagicMock(),
-                call=AsyncMock(
-                    return_value=MagicMock(
-                        body=[
-                            {
-                                "/org/bluez/hci0": "",
-                                "/org/bluez/hci1": "",
-                                "/org/bluez/hci1/any": "",
-                            }
-                        ],
-                        message_type="wrong",
-                    )
-                ),
-            )
+            pass
 
         def disconnect(self):
             pass
+
+        async def call(self, *args, **kwargs):
+            return MagicMock(
+                body=[
+                    {
+                        "/org/bluez/hci0": "",
+                        "/org/bluez/hci1": "",
+                        "/org/bluez/hci1/any": "",
+                    }
+                ],
+                message_type="wrong",
+            )
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == []
@@ -343,25 +339,23 @@ async def test_get_bluetooth_adapters_correct_return_valid_message():
             pass
 
         async def connect(self):
-            return AsyncMock(
-                disconnect=MagicMock(),
-                call=AsyncMock(
-                    return_value=MagicMock(
-                        body=[
-                            {
-                                "/other": {},
-                                "/org/bluez/hci0": {},
-                                "/org/bluez/hci1": {},
-                                "/org/bluez/hci1/any": {},
-                            }
-                        ],
-                        message_type=MessageType.METHOD_RETURN,
-                    )
-                ),
-            )
+            pass
 
         def disconnect(self):
             pass
+
+        async def call(self, *args, **kwargs):
+            return MagicMock(
+                body=[
+                    {
+                        "/other": {},
+                        "/org/bluez/hci0": {},
+                        "/org/bluez/hci1": {},
+                        "/org/bluez/hci1/any": {},
+                    }
+                ],
+                message_type=MessageType.METHOD_RETURN,
+            )
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         assert await get_bluetooth_adapters() == ["hci0", "hci1"]
@@ -378,25 +372,23 @@ async def test_get_dbus_managed_objects():
             pass
 
         async def connect(self):
-            return AsyncMock(
-                disconnect=MagicMock(),
-                call=AsyncMock(
-                    return_value=MagicMock(
-                        body=[
-                            {
-                                "/other": {},
-                                "/org/bluez/hci0": {},
-                                "/org/bluez/hci1": {},
-                                "/org/bluez/hci1/any": {},
-                            }
-                        ],
-                        message_type=MessageType.METHOD_RETURN,
-                    )
-                ),
-            )
+            pass
 
         def disconnect(self):
             pass
+
+        async def call(self, *args, **kwargs):
+            return MagicMock(
+                body=[
+                    {
+                        "/other": {},
+                        "/org/bluez/hci0": {},
+                        "/org/bluez/hci1": {},
+                        "/org/bluez/hci1/any": {},
+                    }
+                ],
+                message_type=MessageType.METHOD_RETURN,
+            )
 
     with patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus):
         assert await get_dbus_managed_objects() == {
