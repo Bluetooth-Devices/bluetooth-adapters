@@ -728,6 +728,7 @@ async def test_get_adapters_linux():
 
     with (
         patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
@@ -753,7 +754,7 @@ async def test_get_adapters_linux():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": "0001",
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
             },
@@ -764,7 +765,7 @@ async def test_get_adapters_linux():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": "0001",
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
             },
@@ -775,7 +776,7 @@ async def test_get_adapters_linux():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": "0001",
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
             },
@@ -1014,6 +1015,7 @@ async def test_get_adapters_linux_device_listed_before_adapter():
 
     with (
         patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
@@ -1039,7 +1041,7 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": "0001",
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
             },
@@ -1050,7 +1052,7 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": "0001",
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
             },
@@ -1061,7 +1063,7 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": "0001",
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
             },
@@ -1303,6 +1305,7 @@ async def test_get_adapters_linux_uart():
 
     with (
         patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
@@ -1333,7 +1336,7 @@ async def test_get_adapters_linux_uart():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": None,
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": None,
                 "adapter_type": "uart",
             },
@@ -1344,7 +1347,7 @@ async def test_get_adapters_linux_uart():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": None,
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": None,
                 "adapter_type": "uart",
             },
@@ -1355,7 +1358,7 @@ async def test_get_adapters_linux_uart():
                 "passive_scan": False,
                 "product": "Bluetooth 4.0 USB Adapter",
                 "product_id": None,
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "vendor_id": None,
                 "adapter_type": "uart",
             },
@@ -1505,6 +1508,7 @@ async def test_get_adapters_linux_no_usb_device():
 
     with (
         patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
@@ -1528,7 +1532,7 @@ async def test_get_adapters_linux_no_usb_device():
                 "product_id": "0001",
                 "hw_version": "usb:v1D6Bp0246d053F",
                 "passive_scan": False,
-                "sw_version": "homeassistant",
+                "sw_version": "18.7.0",
                 "adapter_type": "usb",
             },
         }
@@ -1626,7 +1630,7 @@ def test_adapter_model():
             "product_id": "0001",
             "hw_version": "usb:v1D6Bp0246d053F",
             "passive_scan": False,
-            "sw_version": "homeassistant",
+            "sw_version": "18.7.0",
         }
     )
     assert adapter_model(linux_details) == "Bluetooth 4.0 USB Adapter (0a12:0001)"
