@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import platform
 from typing import Any
 
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
@@ -85,7 +86,7 @@ class LinuxAdapters(BluetoothAdapters):
                         manufacturer = aiooui.get_vendor(mac_address)
                     adapters[name] = AdapterDetails(
                         address=mac_address,
-                        sw_version="Unknown",
+                        sw_version=platform.release(),
                         hw_version=None,
                         passive_scan=False,  # assume false if we don't know
                         manufacturer=manufacturer,
@@ -140,7 +141,7 @@ class LinuxAdapters(BluetoothAdapters):
 
                 adapters[adapter] = AdapterDetails(
                     address=mac_address,
-                    sw_version=adapter1["Name"],  # This is actually the BlueZ version
+                    sw_version=platform.release(),
                     hw_version=adapter1.get("Modalias"),
                     passive_scan="org.bluez.AdvertisementMonitorManager1" in details,
                     manufacturer=manufacturer,
