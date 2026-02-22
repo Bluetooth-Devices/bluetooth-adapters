@@ -760,6 +760,8 @@ async def test_get_adapters_linux():
                 "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
             },
             "hci2": {
                 "address": "00:00:00:00:00:00",
@@ -771,6 +773,8 @@ async def test_get_adapters_linux():
                 "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
             },
             "hci3": {
                 "address": "00:1A:7D:DA:71:05",
@@ -782,6 +786,8 @@ async def test_get_adapters_linux():
                 "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
             },
         }
 
@@ -1050,6 +1056,8 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
             },
             "hci2": {
                 "address": "00:00:00:00:00:00",
@@ -1061,6 +1069,8 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
             },
             "hci3": {
                 "address": "00:1A:7D:DA:71:05",
@@ -1072,6 +1082,8 @@ async def test_get_adapters_linux_device_listed_before_adapter():
                 "sw_version": "18.7.0",
                 "vendor_id": "0a12",
                 "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
             },
         }
 
@@ -1348,6 +1360,8 @@ async def test_get_adapters_linux_uart():
                 "sw_version": "18.7.0",
                 "vendor_id": None,
                 "adapter_type": "uart",
+                "advertise": True,
+                "powered": True,
             },
             "hci2": {
                 "address": "00:00:00:00:00:00",
@@ -1359,6 +1373,8 @@ async def test_get_adapters_linux_uart():
                 "sw_version": "18.7.0",
                 "vendor_id": None,
                 "adapter_type": "uart",
+                "advertise": True,
+                "powered": True,
             },
             "hci3": {
                 "address": "00:1A:7D:DA:71:05",
@@ -1370,6 +1386,8 @@ async def test_get_adapters_linux_uart():
                 "sw_version": "18.7.0",
                 "vendor_id": None,
                 "adapter_type": "uart",
+                "advertise": True,
+                "powered": True,
             },
         }
 
@@ -1546,6 +1564,8 @@ async def test_get_adapters_linux_no_usb_device():
                 "passive_scan": False,
                 "sw_version": "18.7.0",
                 "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
             },
         }
 
@@ -1585,8 +1605,18 @@ async def test_get_adapters_linux_hci_only_adapter():
         patch(
             "bluetooth_adapters.systems.linux.get_adapters_from_hci",
             return_value={
-                5: {"name": "hci5", "bdaddr": "00:1A:7D:DA:71:13"},
-                9: {"name": "hci9", "bdaddr": "00:00:00:00:00:00"},
+                5: {
+                    "name": "hci5",
+                    "bdaddr": "00:1A:7D:DA:71:13",
+                    "powered": True,
+                    "advertise": True,
+                },
+                9: {
+                    "name": "hci9",
+                    "bdaddr": "00:00:00:00:00:00",
+                    "powered": False,
+                    "advertise": False,
+                },
             },
         ),
         patch(
@@ -1607,6 +1637,8 @@ async def test_get_adapters_linux_hci_only_adapter():
                 "vendor_id": None,
                 "product_id": None,
                 "adapter_type": None,
+                "powered": True,
+                "advertise": True,
             },
             "hci9": {
                 "address": "00:00:00:00:00:00",
@@ -1618,6 +1650,8 @@ async def test_get_adapters_linux_hci_only_adapter():
                 "vendor_id": None,
                 "product_id": None,
                 "adapter_type": None,
+                "powered": False,
+                "advertise": False,
             },
         }
 
@@ -1643,6 +1677,8 @@ async def test_get_adapters_macos():
                 "vendor_id": "Unknown",
                 "product_id": "Unknown",
                 "adapter_type": None,
+                "advertise": True,
+                "powered": True,
             }
         }
 
@@ -1668,6 +1704,8 @@ async def test_get_adapters_windows():
                 "vendor_id": "Unknown",
                 "product_id": "Unknown",
                 "adapter_type": None,
+                "advertise": True,
+                "powered": True,
             }
         }
 
@@ -1702,6 +1740,8 @@ def test_adapter_model():
             "product": "Unknown Windows Model",
             "vendor_id": "Unknown",
             "product_id": "Unknown",
+            "advertise": True,
+            "powered": True,
         }
     )
     assert adapter_model(windows_details) == "Unknown Windows Model"
@@ -1715,6 +1755,8 @@ def test_adapter_model():
             "hw_version": "usb:v1D6Bp0246d053F",
             "passive_scan": False,
             "sw_version": "18.7.0",
+            "advertise": True,
+            "powered": True,
         }
     )
     assert adapter_model(linux_details) == "Bluetooth 4.0 USB Adapter (0a12:0001)"

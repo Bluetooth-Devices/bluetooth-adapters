@@ -18,6 +18,11 @@ class AdapterDetails(TypedDict, total=False):
     passive_scan: bool
     connection_slots: int | None
     adapter_type: str | None  # "usb", "uart", or None
+    advertise: bool
+    """Whether the adapter supports advertising."""
+
+    powered: bool
+    """Whether the adapter is powered on."""
 
 
 ADAPTER_ADDRESS: Final = "address"
