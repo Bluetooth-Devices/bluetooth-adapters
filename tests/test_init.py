@@ -731,6 +731,9 @@ async def test_get_adapters_linux():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
         ),
     ):
@@ -1017,6 +1020,9 @@ async def test_get_adapters_linux_device_listed_before_adapter():
         patch("platform.system", return_value="Linux"),
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
         ),
@@ -1308,6 +1314,9 @@ async def test_get_adapters_linux_uart():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
             MockUSBBluetoothDevice,
         ),
@@ -1511,6 +1520,9 @@ async def test_get_adapters_linux_no_usb_device():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
             NoMfrMockBluetoothDevice,
         ),
@@ -1543,7 +1555,7 @@ async def test_get_adapters_linux_no_usb_device():
     MessageType is None or get_dbus_managed_objects is None,
     reason="dbus_fast is not available",
 )
-async def test_get_adapters_linux_hci_only_adapter(mock_get_adapters_from_hci):
+async def test_get_adapters_linux_hci_only_adapter():
     """Test adapters reported only by HCI (not by BlueZ) are merged in.
 
     Exercises the HCI branch of ``LinuxAdapters.adapters``: an adapter known to
@@ -1566,15 +1578,17 @@ async def test_get_adapters_linux_hci_only_adapter(mock_get_adapters_from_hci):
             # BlueZ reports no adapters; everything comes from HCI.
             return MagicMock(body=[{}], message_type=MessageType.METHOD_RETURN)
 
-    mock_get_adapters_from_hci.return_value = {
-        5: {"name": "hci5", "bdaddr": "00:1A:7D:DA:71:13"},
-        9: {"name": "hci9", "bdaddr": "00:00:00:00:00:00"},
-    }
-
     with (
         patch("platform.system", return_value="Linux"),
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci",
+            return_value={
+                5: {"name": "hci5", "bdaddr": "00:1A:7D:DA:71:13"},
+                9: {"name": "hci9", "bdaddr": "00:00:00:00:00:00"},
+            },
+        ),
         patch(
             "bluetooth_adapters.systems.linux.aiooui.get_vendor",
             return_value="Acme Bluetooth",
