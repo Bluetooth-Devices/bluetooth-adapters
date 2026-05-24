@@ -49,8 +49,8 @@ docs = [
 ]
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.4"
-pytest-cov = "^6.3"
+pytest = "^9.0"
+pytest-cov = "^7.1"
 pytest-asyncio = "^1.2.0"
 
 [tool.semantic_release]
