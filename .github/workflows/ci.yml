@@ -17,10 +17,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-          # Lint hooks (e.g. pyupgrade) require Python >= 3.10; the target
-          # Python version they rewrite for is controlled by their args
-          # (--py39-plus), not by this runtime.
-          python-version: "3.13"
+          python-version: "3.10"
       - uses: pre-commit/action@v3.0.1
 
   # Make sure commit messages follow the conventional commits convention:
@@ -50,17 +47,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
-      # Install Poetry with its own standalone Python via pipx (the runner's
-      # default interpreter) before setting up the matrix Python. The latest
-      # Poetry no longer runs on Python 3.9, but we still test against 3.9, so
-      # Poetry's runtime must be decoupled from the interpreter under test.
-      # Poetry creates the project venv from the active PATH Python set below.
-      - name: Install Poetry
-        run: pipx install poetry
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+      - uses: snok/install-poetry@v1
       - name: Install Dependencies
         shell: bash
         run: poetry install
