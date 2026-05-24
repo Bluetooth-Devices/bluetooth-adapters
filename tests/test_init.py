@@ -731,6 +731,9 @@ async def test_get_adapters_linux():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
         ),
     ):
@@ -1017,6 +1020,9 @@ async def test_get_adapters_linux_device_listed_before_adapter():
         patch("platform.system", return_value="Linux"),
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
         ),
@@ -1308,6 +1314,9 @@ async def test_get_adapters_linux_uart():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
             MockUSBBluetoothDevice,
         ),
@@ -1511,6 +1520,9 @@ async def test_get_adapters_linux_no_usb_device():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
             NoMfrMockBluetoothDevice,
         ),
@@ -1534,6 +1546,78 @@ async def test_get_adapters_linux_no_usb_device():
                 "passive_scan": False,
                 "sw_version": "18.7.0",
                 "adapter_type": "usb",
+            },
+        }
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_get_adapters_linux_hci_only_adapter():
+    """Test adapters reported only by HCI (not by BlueZ) are merged in.
+
+    Exercises the HCI branch of ``LinuxAdapters.adapters``: an adapter known to
+    the kernel via HCI but absent from BlueZ should appear with the MAC-derived
+    manufacturer and ``adapter_type`` of ``None``. The empty-MAC adapter should
+    have a ``None`` manufacturer (no vendor lookup attempted).
+    """
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            pass
+
+        def disconnect(self):
+            pass
+
+        async def call(self, *args, **kwargs):
+            # BlueZ reports no adapters; everything comes from HCI.
+            return MagicMock(body=[{}], message_type=MessageType.METHOD_RETURN)
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci",
+            return_value={
+                5: {"name": "hci5", "bdaddr": "00:1A:7D:DA:71:13"},
+                9: {"name": "hci9", "bdaddr": "00:00:00:00:00:00"},
+            },
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.aiooui.get_vendor",
+            return_value="Acme Bluetooth",
+        ),
+    ):
+        bluetooth_adapters = get_adapters()
+        await bluetooth_adapters.refresh()
+        assert bluetooth_adapters.adapters == {
+            "hci5": {
+                "address": "00:1A:7D:DA:71:13",
+                "sw_version": "18.7.0",
+                "hw_version": None,
+                "passive_scan": False,
+                "manufacturer": "Acme Bluetooth",
+                "product": None,
+                "vendor_id": None,
+                "product_id": None,
+                "adapter_type": None,
+            },
+            "hci9": {
+                "address": "00:00:00:00:00:00",
+                "sw_version": "18.7.0",
+                "hw_version": None,
+                "passive_scan": False,
+                "manufacturer": None,
+                "product": None,
+                "vendor_id": None,
+                "product_id": None,
+                "adapter_type": None,
             },
         }
 
