@@ -358,7 +358,7 @@ description = "A faster version of dbus-next"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "sys_platform == \"linux\" or platform_system == \"Linux\""
+markers = "platform_system == \"Linux\" or sys_platform == \"linux\""
 files = [
     {file = "dbus_fast-2.44.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:644880d8db53a6d92e88015f6ac6e0d9a5c1bfdacbc5356de816212cca33c629"},
     {file = "dbus_fast-2.44.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:be7e2e39bc6a5e0fe758d9d7abb19f91a7540e3b45124764f318147b74c9b2e6"},
@@ -1566,5 +1566,5 @@ docs = ["Sphinx", "myst-parser", "sphinx-rtd-theme"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.10,<3.14"
-content-hash = "f37892e33c2732638d5655ebb1e62777395f45b9e04ed10f017a1e857be9b21b"
+python-versions = ">=3.10,<3.15"
+content-hash = "69b8ecf586de3c37d03f61671156d39a046294cc73248a75e7333be530fba8bb"
