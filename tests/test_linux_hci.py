@@ -24,13 +24,16 @@ from bluetooth_adapters.systems.linux_hci import (
 
 
 def _make_ioctl(
-    devices: dict[int, tuple[str, list[int]]],
+    devices: dict[int, tuple[str, list[int]]]
+    | dict[int, tuple[str, list[int], int, list[int]]],
 ) -> Callable[[int, int, Any], int]:
     """Build a fake ``fcntl.ioctl`` that populates the ctypes buffers.
 
-    ``devices`` maps a device id to ``(name, bdaddr_bytes)`` where
-    ``bdaddr_bytes`` is the 6-byte little-endian address as stored by the
-    kernel (``bdaddr_t.__str__`` reverses it when rendering).
+    ``devices`` maps a device id to ``(name, bdaddr_bytes)`` or
+    ``(name, bdaddr_bytes, flags, features)`` where ``bdaddr_bytes`` is the
+    6-byte little-endian address as stored by the kernel (``bdaddr_t.__str__``
+    reverses it when rendering) and ``features`` is the 8-byte LMP feature
+    mask. When ``flags``/``features`` are omitted they default to zero.
     """
 
     def ioctl(_fd: int, request: int, arg: Any) -> int:
@@ -39,9 +42,13 @@ def _make_ioctl(
             for i, dev_id in enumerate(devices):
                 arg.dev_req[i].dev_id = dev_id
         elif request == HCIGETDEVINFO:
-            name, bdaddr = devices[arg.dev_id]
+            entry = devices[arg.dev_id]
+            name, bdaddr = entry[0], entry[1]
             arg.name = name.encode()
             arg.bdaddr.b = (ctypes.c_uint8 * 6)(*bdaddr)
+            if len(entry) == 4:
+                arg.flags = entry[2]
+                arg.features = (ctypes.c_uint8 * 8)(*entry[3])
         return 0
 
     return ioctl
@@ -67,6 +74,48 @@ def test_get_adapters_from_hci_parses_devices() -> None:
     assert out[0]["bdaddr"] == "00:1A:7D:DA:71:04"
     assert out[1]["name"] == "hci1"
     assert out[1]["bdaddr"] == "00:1A:7D:DA:71:05"
+
+
+def test_get_adapters_from_hci_parses_powered_and_advertise() -> None:
+    """Powered (HCI_UP) and advertise (LMP_LE) bits are decoded correctly."""
+    devices = {
+        # Powered, LE capable: HCI_UP bit 0 set, features[4] has LMP_LE (0x40).
+        0: (
+            "hci0",
+            [0x04, 0x71, 0xDA, 0x7D, 0x1A, 0x00],
+            0x01,
+            [0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00],
+        ),
+        # Down, no LE: flags and features all zero.
+        1: (
+            "hci1",
+            [0x05, 0x71, 0xDA, 0x7D, 0x1A, 0x00],
+            0x00,
+            [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+        ),
+        # Powered but no LE; also exercises other flag bits being ignored.
+        2: (
+            "hci2",
+            [0x06, 0x71, 0xDA, 0x7D, 0x1A, 0x00],
+            0xFF,
+            [0xFF, 0xFF, 0xFF, 0xFF, 0xBF, 0xFF, 0xFF, 0xFF],
+        ),
+    }
+    fake_fcntl = MagicMock()
+    fake_fcntl.ioctl.side_effect = _make_ioctl(devices)
+
+    with (
+        patch.object(linux_hci, "fcntl", fake_fcntl),
+        patch.object(linux_hci, "socket"),
+    ):
+        out = get_adapters_from_hci()
+
+    assert out[0]["powered"] is True
+    assert out[0]["advertise"] is True
+    assert out[1]["powered"] is False
+    assert out[1]["advertise"] is False
+    assert out[2]["powered"] is True
+    assert out[2]["advertise"] is False
 
 
 def test_get_adapters_from_hci_empty_when_no_devices() -> None:
