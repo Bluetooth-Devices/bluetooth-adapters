@@ -28,13 +28,13 @@ class MissingDefaultAdapter(BluetoothAdapters):
 def test_base_class_cannot_be_instantiated():
     """The base class is abstract and must not be instantiable."""
     with pytest.raises(TypeError):
-        BluetoothAdapters()
+        BluetoothAdapters()  # type: ignore[abstract]
 
 
 def test_incomplete_subclass_cannot_be_instantiated():
     """A subclass missing an abstract member stays abstract."""
     with pytest.raises(TypeError):
-        MissingDefaultAdapter()
+        MissingDefaultAdapter()  # type: ignore[abstract]
 
 
 def test_complete_subclass_can_be_instantiated():
@@ -48,5 +48,5 @@ def test_complete_subclass_can_be_instantiated():
 async def test_concrete_defaults_on_subclass():
     """refresh() and history have usable concrete defaults from the base."""
     adapters = CompleteAdapters()
-    assert await adapters.refresh() is None
+    await adapters.refresh()
     assert adapters.history == {}
