@@ -17,7 +17,7 @@ except (AttributeError, ImportError):
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
 from bluetooth_adapters import get_manufacturer_from_mac
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
-from uart_devices import UARTDevice
+from uart_devices import NotAUARTDeviceError, UARTDevice
 from usb_devices import BluetoothDevice as USBBluetoothDevice
 from usb_devices import NotAUSBDeviceError, USBDevice
 
@@ -2117,3 +2117,340 @@ def test_discovered_device_advertisement_data_from_dict_corrupt(caplog):
     )
     assert result is None
     assert "Error deserializing discovered_device_advertisement_data" in caplog.text
+
+
+def _single_adapter_message_bus(address, *, modalias="usb:v1D6Bp0246d053F"):
+    """Build a MockMessageBus exposing a single BlueZ adapter at hci0.
+
+    Keeps the manufacturer-resolution branch tests compact: only the
+    properties read by ``LinuxAdapters.adapters`` are populated.
+    """
+
+    body = {
+        "/org/bluez/hci0": {
+            "org.bluez.Adapter1": {
+                "Address": address,
+                "Powered": True,
+                "Modalias": modalias,
+            },
+            "org.bluez.LEAdvertisingManager1": {},
+        },
+    }
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            pass
+
+        def disconnect(self):
+            pass
+
+        async def call(self, *args, **kwargs):
+            return MagicMock(body=[body], message_type=MessageType.METHOD_RETURN)
+
+    return MockMessageBus
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_get_adapters_linux_caches_result():
+    """adapters is computed once and the same object is returned on reaccess."""
+
+    class MockUSBDevice(USBDevice):
+        def __init__(self, *args, **kwargs):
+            self.manufacturer = "XTech"
+            self.product = "Bluetooth 4.0 USB Adapter"
+            self.vendor_id = "0a12"
+            self.product_id = "0001"
+
+    class MockBluetoothDevice(USBBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = MockUSBDevice()
+
+        def setup(self, *args, **kwargs):
+            pass
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch(
+            "bluetooth_adapters.dbus.MessageBus",
+            _single_adapter_message_bus("00:1A:7D:DA:71:04"),
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
+        ),
+    ):
+        adapters = get_adapters()
+        await adapters.refresh()
+        first = adapters.adapters
+        # Second access must return the cached object, not recompute it.
+        assert adapters.adapters is first
+        # A device manufacturer that is real (not the vendor id / Unknown / None)
+        # is used verbatim instead of the MAC vendor lookup.
+        assert first["hci0"]["manufacturer"] == "XTech"
+        assert first["hci0"]["adapter_type"] == "usb"
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_get_adapters_linux_usb_device_missing():
+    """A USB adapter whose usb_device is None and address is empty resolves blank."""
+
+    class MockBluetoothDevice(USBBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = None
+
+        def setup(self, *args, **kwargs):
+            pass
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch(
+            "bluetooth_adapters.dbus.MessageBus",
+            _single_adapter_message_bus(DEFAULT_ADDRESS),
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
+        ),
+    ):
+        adapters = get_adapters()
+        await adapters.refresh()
+        assert adapters.adapters == {
+            "hci0": {
+                "address": DEFAULT_ADDRESS,
+                "hw_version": "usb:v1D6Bp0246d053F",
+                "manufacturer": None,
+                "passive_scan": False,
+                "product": None,
+                "product_id": None,
+                "sw_version": "18.7.0",
+                "vendor_id": None,
+                "adapter_type": "usb",
+                "advertise": True,
+                "powered": True,
+            },
+        }
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_get_adapters_linux_uart_device_missing():
+    """A UART adapter whose uart_device is None falls back to the MAC vendor."""
+
+    class MockUSB(USBBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = None
+
+        def setup(self, *args, **kwargs):
+            raise NotAUSBDeviceError
+
+    class MockUART(UARTBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.uart_device = None
+
+        def setup(self, *args, **kwargs):
+            pass
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch(
+            "bluetooth_adapters.dbus.MessageBus",
+            _single_adapter_message_bus("00:1A:7D:DA:71:04"),
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
+        patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
+    ):
+        adapters = get_adapters()
+        await adapters.refresh()
+        assert adapters.adapters["hci0"]["adapter_type"] == "uart"
+        assert adapters.adapters["hci0"]["manufacturer"] == "cyber-blue(HK)Ltd"
+        assert adapters.adapters["hci0"]["product"] is None
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_get_adapters_linux_uart_device_missing_empty_address():
+    """A UART adapter with no uart_device and an empty address has no vendor."""
+
+    class MockUSB(USBBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = None
+
+        def setup(self, *args, **kwargs):
+            raise NotAUSBDeviceError
+
+    class MockUART(UARTBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.uart_device = None
+
+        def setup(self, *args, **kwargs):
+            pass
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch(
+            "bluetooth_adapters.dbus.MessageBus",
+            _single_adapter_message_bus(DEFAULT_ADDRESS),
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
+        patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
+    ):
+        adapters = get_adapters()
+        await adapters.refresh()
+        assert adapters.adapters["hci0"]["adapter_type"] == "uart"
+        # Empty address skips the MAC vendor lookup; nothing to resolve from.
+        assert adapters.adapters["hci0"]["manufacturer"] is None
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_refresh_devices_setup_file_not_found():
+    """A FileNotFoundError during setup stops probing; the adapter stays USB."""
+
+    class MockUSB(USBBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = None
+
+        def setup(self, *args, **kwargs):
+            raise FileNotFoundError
+
+    class MockUART(UARTBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.uart_device = None
+
+        def setup(self, *args, **kwargs):
+            pass
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch(
+            "bluetooth_adapters.dbus.MessageBus",
+            _single_adapter_message_bus("00:1A:7D:DA:71:04"),
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
+        patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
+    ):
+        adapters = get_adapters()
+        await adapters.refresh()
+        # break (not continue) means we never fell through to the UART probe.
+        assert adapters.adapters["hci0"]["adapter_type"] == "usb"
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_refresh_devices_setup_unexpected_error(caplog):
+    """An unexpected setup error is logged and stops probing for that adapter."""
+
+    class MockUSB(USBBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = None
+
+        def setup(self, *args, **kwargs):
+            raise ValueError("boom")
+
+    class MockUART(UARTBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.uart_device = None
+
+        def setup(self, *args, **kwargs):
+            pass
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch(
+            "bluetooth_adapters.dbus.MessageBus",
+            _single_adapter_message_bus("00:1A:7D:DA:71:04"),
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
+        patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
+    ):
+        adapters = get_adapters()
+        await adapters.refresh()
+        assert adapters.adapters["hci0"]["adapter_type"] == "usb"
+    assert "Unexpected error setting up device" in caplog.text
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
+async def test_refresh_devices_neither_usb_nor_uart():
+    """When both probes reject the device, the last-tried (UART) type wins."""
+
+    class MockUSB(USBBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.usb_device = None
+
+        def setup(self, *args, **kwargs):
+            raise NotAUSBDeviceError
+
+    class MockUART(UARTBluetoothDevice):
+        def __init__(self, *args, **kwargs):
+            self.uart_device = None
+
+        def setup(self, *args, **kwargs):
+            raise NotAUARTDeviceError
+
+    with (
+        patch("platform.system", return_value="Linux"),
+        patch("platform.release", return_value="18.7.0"),
+        patch(
+            "bluetooth_adapters.dbus.MessageBus",
+            _single_adapter_message_bus("00:1A:7D:DA:71:04"),
+        ),
+        patch(
+            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
+        ),
+        patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
+        patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
+    ):
+        adapters = get_adapters()
+        await adapters.refresh()
+        # Both probes raised; the adapter still surfaces with MAC-derived vendor.
+        assert adapters.adapters["hci0"]["adapter_type"] == "uart"
+        assert adapters.adapters["hci0"]["manufacturer"] == "cyber-blue(HK)Ltd"
