@@ -731,9 +731,6 @@ async def test_get_adapters_linux():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
-        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
         ),
     ):
@@ -1026,9 +1023,6 @@ async def test_get_adapters_linux_device_listed_before_adapter():
         patch("platform.system", return_value="Linux"),
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
         ),
@@ -1326,9 +1320,6 @@ async def test_get_adapters_linux_uart():
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
         patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
-        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
             MockUSBBluetoothDevice,
         ),
@@ -1537,9 +1528,6 @@ async def test_get_adapters_linux_no_usb_device():
         patch("platform.system", return_value="Linux"),
         patch("platform.release", return_value="18.7.0"),
         patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice",
             NoMfrMockBluetoothDevice,
@@ -2183,9 +2171,6 @@ async def test_get_adapters_linux_caches_result():
             _single_adapter_message_bus("00:1A:7D:DA:71:04"),
         ),
         patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
-        patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
         ),
     ):
@@ -2221,9 +2206,6 @@ async def test_get_adapters_linux_usb_device_missing():
         patch(
             "bluetooth_adapters.dbus.MessageBus",
             _single_adapter_message_bus(DEFAULT_ADDRESS),
-        ),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
         ),
         patch(
             "bluetooth_adapters.systems.linux.USBBluetoothDevice", MockBluetoothDevice
@@ -2277,9 +2259,6 @@ async def test_get_adapters_linux_uart_device_missing():
             "bluetooth_adapters.dbus.MessageBus",
             _single_adapter_message_bus("00:1A:7D:DA:71:04"),
         ),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
         patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
         patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
     ):
@@ -2318,9 +2297,6 @@ async def test_get_adapters_linux_uart_device_missing_empty_address():
         patch(
             "bluetooth_adapters.dbus.MessageBus",
             _single_adapter_message_bus(DEFAULT_ADDRESS),
-        ),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
         ),
         patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
         patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
@@ -2361,9 +2337,6 @@ async def test_refresh_devices_setup_file_not_found():
             "bluetooth_adapters.dbus.MessageBus",
             _single_adapter_message_bus("00:1A:7D:DA:71:04"),
         ),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
         patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
         patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
     ):
@@ -2402,9 +2375,6 @@ async def test_refresh_devices_setup_unexpected_error(caplog):
             "bluetooth_adapters.dbus.MessageBus",
             _single_adapter_message_bus("00:1A:7D:DA:71:04"),
         ),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
-        ),
         patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
         patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
     ):
@@ -2442,9 +2412,6 @@ async def test_refresh_devices_neither_usb_nor_uart():
         patch(
             "bluetooth_adapters.dbus.MessageBus",
             _single_adapter_message_bus("00:1A:7D:DA:71:04"),
-        ),
-        patch(
-            "bluetooth_adapters.systems.linux.get_adapters_from_hci", return_value={}
         ),
         patch("bluetooth_adapters.systems.linux.USBBluetoothDevice", MockUSB),
         patch("bluetooth_adapters.systems.linux.UARTBluetoothDevice", MockUART),
