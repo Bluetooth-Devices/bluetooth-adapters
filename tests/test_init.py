@@ -10,10 +10,10 @@ from bleak.backends.scanner import AdvertisementData
 
 try:
     from dbus_fast import AuthError, MessageType
-except (AttributeError, ImportError):
+except ImportError:
     MessageType = None
     AuthError = None
-    # dbus_fast is not available on Windows
+    # dbus_fast is not available on Windows/macOS
 import bluetooth_adapters.dbus as bluetooth_adapters_dbus
 from bluetooth_adapters import get_manufacturer_from_mac
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
