@@ -28,11 +28,22 @@ _LOGGER = logging.getLogger(__name__)
 REPLY_TIMEOUT = 8
 
 
+def _ensure_dbus_fast() -> None:
+    """Raise a clear error if dbus_fast is not available on this platform."""
+    if MessageBus is None:
+        raise RuntimeError(
+            "dbus_fast is required for DBus-based bluetooth adapter access "
+            "but is not installed (it is Linux-only). Install bluetooth-adapters "
+            "on a Linux host, or avoid calling DBus helpers on this platform."
+        )
+
+
 class BlueZDBusObjects:
     """Fetch and parse BlueZObjects."""
 
     def __init__(self) -> None:
         """Init the manager."""
+        _ensure_dbus_fast()
         self._packed_managed_objects: dict[str, Any] = {}
         self._unpacked_managed_objects: dict[str, Any] = {}
 
@@ -84,11 +95,13 @@ def _adapters_from_managed_objects(
 
 async def get_bluetooth_adapters() -> list[str]:
     """Return a list of bluetooth adapters."""
+    _ensure_dbus_fast()
     return list(await get_bluetooth_adapter_details())
 
 
 async def get_bluetooth_adapter_details() -> dict[str, dict[str, Any]]:
     """Return a list of bluetooth adapter with details."""
+    _ensure_dbus_fast()
     results = await _get_dbus_managed_objects()
     return {
         adapter: unpack_variants(packed_data)
@@ -98,6 +111,7 @@ async def get_bluetooth_adapter_details() -> dict[str, dict[str, Any]]:
 
 async def get_dbus_managed_objects() -> dict[str, Any]:
     """Return a list of bluetooth adapter with details."""
+    _ensure_dbus_fast()
     results = await _get_dbus_managed_objects()
     return {path: unpack_variants(packed_data) for path, packed_data in results.items()}
 

@@ -1,6 +1,5 @@
 import asyncio
 import time
-from platform import system
 from typing import Any
 from unittest.mock import ANY, MagicMock, patch
 
@@ -21,21 +20,11 @@ from uart_devices import NotAUARTDeviceError, UARTDevice
 from usb_devices import BluetoothDevice as USBBluetoothDevice
 from usb_devices import NotAUSBDeviceError, USBDevice
 
-if system() != "Windows":
-    from bluetooth_adapters import (
-        BlueZDBusObjects,
-        get_bluetooth_adapters,
-        get_dbus_managed_objects,
-    )
-else:
-    BlueZDBusObjects = None  # type: ignore
-    get_bluetooth_adapters = None  # type: ignore
-    get_dbus_managed_objects = None  # type: ignore
-
 from bluetooth_adapters import (
     DEFAULT_ADDRESS,
     AdapterDetails,
     AdvertisementHistory,
+    BlueZDBusObjects,
     DiscoveredDeviceAdvertisementData,
     DiscoveredDeviceAdvertisementDataDict,
     adapter_human_name,
@@ -45,6 +34,8 @@ from bluetooth_adapters import (
     discovered_device_advertisement_data_to_dict,
     expire_stale_scanner_discovered_device_advertisement_data,
     get_adapters,
+    get_bluetooth_adapters,
+    get_dbus_managed_objects,
     load_history_from_managed_objects,
 )
 

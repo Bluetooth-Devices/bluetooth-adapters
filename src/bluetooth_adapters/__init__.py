@@ -1,8 +1,6 @@
 __version__ = "2.4.0"
 
 
-from platform import system
-
 from .adapters import BluetoothAdapters
 from .const import (
     DEFAULT_ADDRESS,
@@ -11,15 +9,12 @@ from .const import (
     UNIX_DEFAULT_BLUETOOTH_ADAPTER,
     WINDOWS_DEFAULT_BLUETOOTH_ADAPTER,
 )
-
-if system() != "Windows":
-    from .dbus import (
-        BlueZDBusObjects,
-        get_bluetooth_adapter_details,
-        get_bluetooth_adapters,
-        get_dbus_managed_objects,
-    )
-
+from .dbus import (
+    BlueZDBusObjects,
+    get_bluetooth_adapter_details,
+    get_bluetooth_adapters,
+    get_dbus_managed_objects,
+)
 from .history import AdvertisementHistory, load_history_from_managed_objects
 from .mac_lookup import get_manufacturer_from_mac
 from .models import (
