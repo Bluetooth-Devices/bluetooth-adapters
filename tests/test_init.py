@@ -2,7 +2,7 @@ import asyncio
 import time
 from platform import system
 from typing import Any
-from unittest.mock import ANY, MagicMock, patch
+from unittest.mock import ANY, AsyncMock, MagicMock, patch
 
 import pytest
 from bleak.backends.device import BLEDevice
@@ -1721,6 +1721,20 @@ async def test_get_manufacturer_from_mac():
     """Test get_manufacturer_from_mac."""
     assert await get_manufacturer_from_mac("00:00:00:00:00:00") is None
     assert await get_manufacturer_from_mac("00:1A:7D:DA:71:04") == "cyber-blue(HK)Ltd"
+
+
+@pytest.mark.asyncio
+async def test_get_manufacturer_from_mac_empty_skips_load():
+    """Empty MAC short-circuits before triggering the OUI load."""
+    with (
+        patch("bluetooth_adapters.mac_lookup.aiooui.is_loaded", return_value=False),
+        patch(
+            "bluetooth_adapters.mac_lookup.aiooui.async_load",
+            new_callable=AsyncMock,
+        ) as mock_load,
+    ):
+        assert await get_manufacturer_from_mac("00:00:00:00:00:00") is None
+        mock_load.assert_not_called()
 
 
 def test_adapter_unique_name():
