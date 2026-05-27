@@ -123,10 +123,11 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
                     "be missing `-v /run/dbus:/run/dbus:ro`: %s",
                     ex,
                 )
-            _LOGGER.debug(
-                "DBus service not found; make sure the DBus socket is available: %s",
-                ex,
-            )
+            else:
+                _LOGGER.debug(
+                    "DBus service not found; make sure the DBus socket is available: %s",
+                    ex,
+                )
             return {}
         except BrokenPipeError as ex:
             if is_docker_env():
@@ -135,9 +136,11 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
                     "`bluetooth`, `dbus`, and finally the docker container",
                     ex,
                 )
-            _LOGGER.debug(
-                "DBus connection broken: %s; try restarting `bluetooth` and `dbus`", ex
-            )
+            else:
+                _LOGGER.debug(
+                    "DBus connection broken: %s; try restarting `bluetooth` and `dbus`",
+                    ex,
+                )
             return {}
         except ConnectionRefusedError as ex:
             if is_docker_env():
@@ -146,9 +149,11 @@ async def _get_dbus_managed_objects() -> dict[str, Any]:
                     "`bluetooth`, `dbus`, and finally the docker container",
                     ex,
                 )
-            _LOGGER.debug(
-                "DBus connection refused: %s; try restarting `bluetooth` and `dbus`", ex
-            )
+            else:
+                _LOGGER.debug(
+                    "DBus connection refused: %s; try restarting `bluetooth` and `dbus`",
+                    ex,
+                )
             return {}
         msg = Message(
             destination="org.bluez",
