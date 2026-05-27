@@ -10,8 +10,8 @@ import asyncio
 try:
     from dbus_fast import AuthError, BusType, Message, MessageType, unpack_variants
     from dbus_fast.aio import MessageBus
-except (AttributeError, ImportError):
-    # dbus_fast is not available on Windows
+except ImportError:
+    # dbus_fast is not available on Windows/macOS
     AuthError = None  # pragma: no cover
     BusType = None  # pragma: no cover
     Message = None  # pragma: no cover
