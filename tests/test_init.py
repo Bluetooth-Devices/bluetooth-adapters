@@ -226,6 +226,67 @@ async def test_get_bluetooth_adapters_connect_broken_pipe_docker():
     MessageType is None or get_dbus_managed_objects is None,
     reason="dbus_fast is not available",
 )
+@pytest.mark.parametrize(
+    ("exc", "docker_only_marker", "generic_marker"),
+    [
+        (
+            FileNotFoundError,
+            "docker config may be missing",
+            "make sure the DBus socket is available",
+        ),
+        (BrokenPipeError, "docker container", "try restarting `bluetooth` and `dbus`"),
+        (
+            ConnectionRefusedError,
+            "docker container",
+            "try restarting `bluetooth` and `dbus`",
+        ),
+    ],
+)
+async def test_connect_failure_logs_one_message_per_env(
+    caplog, exc, docker_only_marker, generic_marker
+):
+    """Each failure mode logs exactly the docker OR generic hint, never both."""
+    import logging
+
+    class MockMessageBus:
+        def __init__(self, *args, **kwargs):
+            pass
+
+        async def connect(self):
+            raise exc
+
+        def disconnect(self):
+            pass
+
+        async def call(self, *args, **kwargs):
+            return None
+
+    with caplog.at_level(logging.DEBUG, logger="bluetooth_adapters.dbus"):
+        with (
+            patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+            patch("bluetooth_adapters.dbus.is_docker_env", return_value=True),
+        ):
+            assert await get_bluetooth_adapters() == []
+        docker_text = caplog.text
+        caplog.clear()
+        with (
+            patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
+            patch("bluetooth_adapters.dbus.is_docker_env", return_value=False),
+        ):
+            assert await get_bluetooth_adapters() == []
+        host_text = caplog.text
+
+    assert docker_only_marker in docker_text
+    assert generic_marker not in docker_text
+    assert generic_marker in host_text
+    assert docker_only_marker not in host_text
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    MessageType is None or get_dbus_managed_objects is None,
+    reason="dbus_fast is not available",
+)
 async def test_get_bluetooth_adapters_connect_eof_error():
     class MockMessageBus:
         def __init__(self, *args, **kwargs):
