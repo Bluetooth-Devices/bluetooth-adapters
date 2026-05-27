@@ -41,7 +41,7 @@ class LinuxAdapters(BluetoothAdapters):
         if not aiooui.is_loaded():
             futures.append(aiooui.async_load())
         await asyncio.gather(*futures)
-        self._hci_output = await adapters_from_hci_future
+        self._hci_output = adapters_from_hci_future.result()
         self._adapters = None  # clear cache
         self._devices = {}
         await loop.run_in_executor(None, self._refresh_devices)
