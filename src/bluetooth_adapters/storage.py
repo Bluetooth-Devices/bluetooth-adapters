@@ -114,7 +114,9 @@ def expire_stale_scanner_discovered_device_advertisement_data(
         if not timestamps:
             expired_scanners.append(scanner)
         _LOGGER.debug(
-            "Loaded %s fresh discovered devices for %s", len(timestamps), scanner
+            "%s fresh discovered devices remain for %s after expiry",
+            len(timestamps),
+            scanner,
         )
 
     for scanner in expired_scanners:
