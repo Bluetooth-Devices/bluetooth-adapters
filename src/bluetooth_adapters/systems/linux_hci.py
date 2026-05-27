@@ -86,14 +86,12 @@ def get_adapters_from_hci() -> dict[int, dict[str, Any]]:
         sock = socket.socket(AF_BLUETOOTH, socket.SOCK_RAW, BTPROTO_HCI)
         buf = hci_dev_list_req()
         buf.dev_num = HCI_MAX_DEV
-        ret = fcntl.ioctl(sock.fileno(), HCIGETDEVLIST, buf)
-        if ret < 0:
-            raise OSError(f"HCIGETDEVLIST failed: {ret}")
+        fcntl.ioctl(sock.fileno(), HCIGETDEVLIST, buf)
         for i in range(buf.dev_num):
             dev_req = buf.dev_req[i]
             dev = hci_dev_info()
             dev.dev_id = dev_req.dev_id
-            ret = fcntl.ioctl(sock.fileno(), HCIGETDEVINFO, dev)
+            fcntl.ioctl(sock.fileno(), HCIGETDEVINFO, dev)
             info = {str(k): getattr(dev, k) for k, *v_ in dev._fields_}
             info["bdaddr"] = str(info["bdaddr"])
             info["name"] = info["name"].decode()

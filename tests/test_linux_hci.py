@@ -171,20 +171,6 @@ def test_get_adapters_from_hci_oserror_returns_empty() -> None:
     assert out == {}
 
 
-def test_get_adapters_from_hci_negative_ret_returns_empty() -> None:
-    """A negative ioctl return (raised as OSError internally) yields {}."""
-    fake_fcntl = MagicMock()
-    fake_fcntl.ioctl.return_value = -1
-
-    with (
-        patch.object(linux_hci, "fcntl", fake_fcntl),
-        patch.object(linux_hci, "socket"),
-    ):
-        out = get_adapters_from_hci()
-
-    assert out == {}
-
-
 def test_get_adapters_from_hci_unexpected_error_returns_empty() -> None:
     """A non-OSError exception is logged and returns {} rather than raising."""
     fake_fcntl = MagicMock()
