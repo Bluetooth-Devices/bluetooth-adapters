@@ -230,13 +230,17 @@ async def test_get_bluetooth_adapters_connect_broken_pipe_docker():
     ("exc", "docker_only_marker", "generic_marker"),
     [
         (
-            FileNotFoundError,
+            FileNotFoundError("mock fnf"),
             "docker config may be missing",
             "make sure the DBus socket is available",
         ),
-        (BrokenPipeError, "docker container", "try restarting `bluetooth` and `dbus`"),
         (
-            ConnectionRefusedError,
+            BrokenPipeError("mock bpe"),
+            "docker container",
+            "try restarting `bluetooth` and `dbus`",
+        ),
+        (
+            ConnectionRefusedError("mock cre"),
             "docker container",
             "try restarting `bluetooth` and `dbus`",
         ),
@@ -261,25 +265,32 @@ async def test_connect_failure_logs_one_message_per_env(
         async def call(self, *args, **kwargs):
             return None
 
+    def _count(records, marker):
+        return sum(
+            1
+            for r in records
+            if r.name == "bluetooth_adapters.dbus" and marker in r.getMessage()
+        )
+
     with caplog.at_level(logging.DEBUG, logger="bluetooth_adapters.dbus"):
         with (
             patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
             patch("bluetooth_adapters.dbus.is_docker_env", return_value=True),
         ):
             assert await get_bluetooth_adapters() == []
-        docker_text = caplog.text
+        docker_records = list(caplog.records)
         caplog.clear()
         with (
             patch("bluetooth_adapters.dbus.MessageBus", MockMessageBus),
             patch("bluetooth_adapters.dbus.is_docker_env", return_value=False),
         ):
             assert await get_bluetooth_adapters() == []
-        host_text = caplog.text
+        host_records = list(caplog.records)
 
-    assert docker_only_marker in docker_text
-    assert generic_marker not in docker_text
-    assert generic_marker in host_text
-    assert docker_only_marker not in host_text
+    assert _count(docker_records, docker_only_marker) == 1
+    assert _count(docker_records, generic_marker) == 0
+    assert _count(host_records, generic_marker) == 1
+    assert _count(host_records, docker_only_marker) == 0
 
 
 @pytest.mark.asyncio
