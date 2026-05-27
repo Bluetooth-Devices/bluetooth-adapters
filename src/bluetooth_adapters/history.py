@@ -29,18 +29,16 @@ def load_history_from_managed_objects(
         if not (props := packed_data.get("org.bluez.Device1")):
             continue
 
+        adapter = path_str.split("/")[3]
+        if source_adapter and adapter != source_adapter:
+            continue
+
         address = props["Address"]
         rssi = props.get("RSSI", MIN_RSSI)
 
         if (
             prev_history := history.get(address)
         ) and prev_history.advertisement_data.rssi >= rssi:
-            continue
-
-        split_path = path_str.split("/")
-        adapter = split_path[3]
-
-        if source_adapter and adapter != source_adapter:
             continue
 
         uuids = props.get("UUIDs", [])
