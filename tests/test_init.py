@@ -14,12 +14,13 @@ except (AttributeError, ImportError):
     MessageType = None
     AuthError = None
     # dbus_fast is not available on Windows
-import bluetooth_adapters.dbus as bluetooth_adapters_dbus
-from bluetooth_adapters import get_manufacturer_from_mac
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
 from uart_devices import NotAUARTDeviceError, UARTDevice
 from usb_devices import BluetoothDevice as USBBluetoothDevice
 from usb_devices import NotAUSBDeviceError, USBDevice
+
+import bluetooth_adapters.dbus as bluetooth_adapters_dbus
+from bluetooth_adapters import get_manufacturer_from_mac
 
 if system() != "Windows":
     from bluetooth_adapters import (
@@ -716,12 +717,10 @@ async def test_get_adapters_linux():
             self.product = "Bluetooth 4.0 USB Adapter"
             self.vendor_id = "0a12"
             self.product_id = "0001"
-            pass
 
     class MockBluetoothDevice(USBBluetoothDevice):
         def __init__(self, *args, **kwargs):
             self.usb_device = MockUSBDevice()
-            pass
 
         def setup(self, *args, **kwargs):
             pass
@@ -1012,12 +1011,10 @@ async def test_get_adapters_linux_device_listed_before_adapter():
             self.product = "Bluetooth 4.0 USB Adapter"
             self.vendor_id = "0a12"
             self.product_id = "0001"
-            pass
 
     class MockBluetoothDevice(USBBluetoothDevice):
         def __init__(self, *args, **kwargs):
             self.usb_device = MockUSBDevice()
-            pass
 
         def setup(self, *args, **kwargs):
             pass
@@ -1303,12 +1300,10 @@ async def test_get_adapters_linux_uart():
         def __init__(self, *args, **kwargs):
             self.manufacturer = "XTech"
             self.product = "Bluetooth 4.0 USB Adapter"
-            pass
 
     class MockUARTBluetoothDevice(UARTBluetoothDevice):
         def __init__(self, *args, **kwargs):
             self.uart_device = MockUARTDevice()
-            pass
 
         def setup(self, *args, **kwargs):
             pass
@@ -1316,7 +1311,6 @@ async def test_get_adapters_linux_uart():
     class MockUSBBluetoothDevice(UARTBluetoothDevice):
         def __init__(self, *args, **kwargs):
             self.uart_device = MockUARTDevice()
-            pass
 
         def setup(self, *args, **kwargs):
             raise NotAUSBDeviceError
@@ -1523,12 +1517,10 @@ async def test_get_adapters_linux_no_usb_device():
             self.product = "Bluetooth 4.0 USB Adapter"
             self.vendor_id = "0a12"
             self.product_id = "0001"
-            pass
 
     class NoMfrMockBluetoothDevice(USBBluetoothDevice):
         def __init__(self, *args, **kwargs):
             self.usb_device = NoMfrMockUSBDevice()
-            pass
 
         def setup(self, *args, **kwargs):
             pass
