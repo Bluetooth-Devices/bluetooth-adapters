@@ -5,12 +5,11 @@ import logging
 import platform
 from typing import Any
 
+import aiooui
 from uart_devices import BluetoothDevice as UARTBluetoothDevice
 from uart_devices import NotAUARTDeviceError
 from usb_devices import BluetoothDevice as USBBluetoothDevice
 from usb_devices import NotAUSBDeviceError
-
-import aiooui
 
 from ..adapters import BluetoothAdapters
 from ..const import EMPTY_MAC_ADDRESS, UNIX_DEFAULT_BLUETOOTH_ADAPTER

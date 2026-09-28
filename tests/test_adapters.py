@@ -1,6 +1,7 @@
 """Tests for the BluetoothAdapters abstract base class."""
 
 import pytest
+
 from bluetooth_adapters.adapters import BluetoothAdapters
 from bluetooth_adapters.models import AdapterDetails
 
