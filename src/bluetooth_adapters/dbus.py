@@ -1,11 +1,11 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 from contextlib import ExitStack
 from functools import cache
 from pathlib import Path
 from typing import Any
-import asyncio
 
 try:
     from dbus_fast import AuthError, BusType, Message, MessageType, unpack_variants
